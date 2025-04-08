@@ -1,55 +1,49 @@
 'use client';
 
-import * as React from 'react';
-import { useRouter } from 'next/navigation';
-import Alert from '@mui/material/Alert';
+import { useSession } from 'next-auth/react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
-import { paths } from '@/paths';
-import { logger } from '@/lib/default-logger';
-import { useUser } from '@/hooks/use-user';
-
-export interface AuthGuardProps {
-  children: React.ReactNode;
-}
-
-export function AuthGuard({ children }: AuthGuardProps): React.JSX.Element | null {
+export function AuthGuard({ children }: { children: React.ReactNode }) {
+  const { data: session, status } = useSession();
   const router = useRouter();
-  const { user, error, isLoading } = useUser();
-  const [isChecking, setIsChecking] = React.useState<boolean>(true);
+  const pathname = usePathname();
 
-  const checkPermissions = async (): Promise<void> => {
-    if (isLoading) {
-      return;
-    }
+  useEffect(() => {
+    const checkAuth = async () => {
+      if (status === 'loading') return;
 
-    if (error) {
-      setIsChecking(false);
-      return;
-    }
+      if (status === 'unauthenticated') {
+        console.debug('🔒 Not authenticated, redirecting to /auth/sign-in');
+        router.replace('/auth/sign-in');
+        return;
+      }
 
-    if (!user) {
-      logger.debug('[AuthGuard]: User is not logged in, redirecting to sign in');
-      router.replace(paths.auth.signIn);
-      return;
-    }
+      // Fetch /api/me for `accepted` status
+      try {
+        const res = await fetch('/api/me');
+        const user = await res.json();
 
-    setIsChecking(false);
-  };
+        console.debug('🧠 User from /api/me in AuthGuard:', user);
 
-  React.useEffect(() => {
-    checkPermissions().catch(() => {
-      // noop
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- Expected
-  }, [user, error, isLoading]);
+        // 🔁 Loop protection
+        if (!user.accepted && pathname !== '/consultation-confirmed') {
+          router.replace('/consultation-confirmed');
+        } else if (user.accepted && pathname === '/consultation-confirmed') {
+          router.replace('/dashboard');
+        }
+      } catch (err) {
+        console.error('❌ Failed to fetch /api/me in AuthGuard:', err);
+        router.replace('/auth/sign-in');
+      }
+    };
 
-  if (isChecking) {
+    checkAuth();
+  }, [status, pathname, router]);
+
+  if (status === 'loading') {
     return null;
   }
 
-  if (error) {
-    return <Alert color="error">{error}</Alert>;
-  }
-
-  return <React.Fragment>{children}</React.Fragment>;
+  return <>{children}</>;
 }

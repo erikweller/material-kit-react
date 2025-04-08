@@ -1,0 +1,14 @@
+/*
+  Warnings:
+
+  - Made the column `firstName` on table `User` required. This step will fail if there are existing NULL values in that column.
+  - Made the column `lastName` on table `User` required. This step will fail if there are existing NULL values in that column.
+
+*/
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "bestContactTime" TEXT,
+ADD COLUMN     "gender" TEXT,
+ADD COLUMN     "occupation" TEXT,
+ADD COLUMN     "otherOccupation" TEXT,
+ALTER COLUMN "firstName" SET NOT NULL,
+ALTER COLUMN "lastName" SET NOT NULL;

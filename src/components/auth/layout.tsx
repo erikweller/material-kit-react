@@ -1,7 +1,6 @@
 import * as React from 'react';
 import RouterLink from 'next/link';
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import { paths } from '@/paths';
@@ -18,50 +17,98 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
         display: { xs: 'flex', lg: 'grid' },
         flexDirection: 'column',
         gridTemplateColumns: '1fr 1fr',
-        minHeight: '100%',
+        minHeight: '100vh',
+        backgroundColor: '#344780', // dark blue base
       }}
     >
-      <Box sx={{ display: 'flex', flex: '1 1 auto', flexDirection: 'column' }}>
-        <Box sx={{ p: 3 }}>
-          <Box component={RouterLink} href={paths.home} sx={{ display: 'inline-block', fontSize: 0 }}>
-            <DynamicLogo colorDark="light" colorLight="dark" height={32} width={122} />
-          </Box>
-        </Box>
-        <Box sx={{ alignItems: 'center', display: 'flex', flex: '1 1 auto', justifyContent: 'center', p: 3 }}>
-          <Box sx={{ maxWidth: '450px', width: '100%' }}>{children}</Box>
-        </Box>
-      </Box>
+      {/* Left: Sign Up Form Panel */}
       <Box
         sx={{
-          alignItems: 'center',
-          background: 'radial-gradient(50% 50% at 50% 50%, #122647 0%, #090E23 100%)',
-          color: 'var(--mui-palette-common-white)',
-          display: { xs: 'none', lg: 'flex' },
+          display: 'flex',
+          flex: '1 1 auto',
+          flexDirection: 'column',
+          zIndex: 1,
           justifyContent: 'center',
-          p: 3,
+          alignItems: 'center',
+          px: 5,
         }}
       >
-        <Stack spacing={3}>
-          <Stack spacing={1}>
-            <Typography color="inherit" sx={{ fontSize: '24px', lineHeight: '32px', textAlign: 'center' }} variant="h1">
-              Welcome to{' '}
-              <Box component="span" sx={{ color: '#15b79e' }}>
-                Devias Kit
-              </Box>
-            </Typography>
-            <Typography align="center" variant="subtitle1">
-              A professional template that comes with ready-to-use MUI components.
-            </Typography>
-          </Stack>
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Box
-              component="img"
-              alt="Widgets"
-              src="/assets/auth-widgets.png"
-              sx={{ height: 'auto', width: '100%', maxWidth: '600px' }}
-            />
+        <Box
+          sx={{
+            backgroundColor: 'white',
+            borderRadius: 2,
+            boxShadow: 6,
+            width: '100%',
+            maxWidth: '650px',
+            my: 8,
+            
+            
+            p: 4,
+          }}
+        >
+          <Box sx={{ mb: 3 }}>
+            <Box component={RouterLink} href={paths.home} sx={{ display: 'inline-block' }}>
+              <DynamicLogo colorDark="light" colorLight="dark" height={32} width={140} />
+            </Box>
           </Box>
-        </Stack>
+
+          {/* Form children */}
+          <Box>{children}</Box>
+        </Box>
+      </Box>
+
+      {/* Right: Video background */}
+      <Box
+        sx={{
+          position: 'relative',
+          overflow: 'hidden',
+          display: { xs: 'none', lg: 'block' },
+        }}
+      >
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          style={{
+            objectFit: 'cover',
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+          }}
+        >
+          <source src="/assets/carevillage-background.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+
+        <Box
+          sx={{
+            position: 'absolute',
+            zIndex: 1,
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(18, 38, 71, 0.5)',
+            color: 'white',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
+            px: 4,
+          }}
+        >
+          <Box>
+            <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 2 }}>
+              Welcome to CareVillage
+            </Typography>
+            <Typography variant="subtitle1">
+              Helping caregivers connect, share, and grow together.
+            </Typography>
+          </Box>
+        </Box>
       </Box>
     </Box>
   );

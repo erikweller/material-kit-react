@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                      Int      @id @default(autoincrement())
+  email                   String   @unique
+  password                String
+  firstName               String
+  lastName                String
+  age                     Int?
+  caregivingRole          String?
+  careRecipientAge        String?
+  gender                  String?  // 👈 NEW
+  occupation              String?  // 👈 NEW
+  otherOccupation         String?  // 👈 NEW (if selected "Other")
+  bestContactTime         String?  // 👈 NEW
+  challenges              String[]
+  communicationMethod     String?
+  interests               String[]
+  location                String?
+  consultationZoomLink    String?
+  consultationScheduledAt DateTime?
+  calendlyRescheduleUrl   String?
+  calendlyCancelUrl       String?
+  role                    String   @default("user")
+  accepted                Boolean   @default(false)
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+}
