@@ -287,45 +287,47 @@ export default function UserInfoPage() {
                 ))}
               </Select>
             </FormControl>
-
+            {renderFieldLabel('Phone Number')}
             <Box
-  mt={2}
-  sx={{
-    border: '1px solid #ccc',
-    borderRadius: '8px',
-    padding: '8px 12px',
-    transition: 'border-color 0.3s',
-    '&:focus-within': {
-      borderColor: 'primary.main',
-      boxShadow: (theme) => `0 0 0 2px ${theme.palette.primary.light}`,
-    },
-    '& input': {
-      fontSize: '1rem',
-      width: '100%',
-      border: 'none',
-      outline: 'none',
-    },
-  }}
->
+                mt={2}
+                sx={{
+                  border: '1px solid #ccc',
+                  borderRadius: '8px',
+                  padding: '8px 12px',
+                  transition: 'border-color 0.3s',
+                  '&:focus-within': {
+                    borderColor: 'primary.main',
+                    boxShadow: (theme) => `0 0 0 2px ${theme.palette.primary.light}`,
+                  },
+                  '& input': {
+                    fontSize: '1rem',
+                    width: '100%',
+                    border: 'none',
+                    outline: 'none',
+                  },
+                }}
+              >
   
-  <PhoneInput
-  
-    defaultCountry="US"
-    international
-    countryCallingCodeEditable={false}
-    value={formData.phoneNumber}
-    onChange={(value) =>
-      setFormData((prev) => ({ ...prev, phoneNumber: value || '' }))
-    }
-  />
-</Box>
+              <PhoneInput
+              
+                defaultCountry="US"
+                international
+                countryCallingCodeEditable={false}
+                value={formData.phoneNumber}
+                onChange={(value) =>
+                  setFormData((prev) => ({ ...prev, phoneNumber: value || '' }))
+                }
+              />
+            </Box>
 
 
 
             {renderFieldLabel('Your Interests')}
             <Box p={2} border="1px solid #ccc" borderRadius="12px">
               <FormGroup>
-                {['Reading', 'Gardening', 'Cooking', 'Technology', 'Art', 'Other'].map((interest) => (
+                {['Art', 'Business', 'Cooking', 'Crafts', 'Entertainment', 'Entrepreneurship', 'Fitness', 'Gaming', 
+                'Gardening', 'Learning', 'Music', 'Nature', 'Photography', 'Reading', 'Socializing', 
+                'Sports', 'Technology', 'Travel', 'Volunteering', 'Writing'].map((interest) => (
                   <FormControlLabel
                     key={interest}
                     control={<Checkbox checked={formData.interests.includes(interest)} onChange={() => handleArrayChange('interests', interest)} />}

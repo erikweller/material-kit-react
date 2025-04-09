@@ -29,8 +29,10 @@ export async function PUT(req: Request) {
         caregivingRole:
           body.caregivingRole === 'Other' ? body.otherCaregivingRole : body.caregivingRole,
         careRecipientAge: body.careRecipientAge ?? null,
+        careRecipientCondition: body.careRecipientCondition ?? null,
         challenges: Array.isArray(body.challenges) ? body.challenges.flat() : [],
         communicationMethod: body.communicationMethod ?? null,
+        phoneNumber: body.phoneNumber ?? null,
         interests: Array.isArray(body.interests) ? body.interests.flat() : [],
         location: body.location ?? null,
       },
