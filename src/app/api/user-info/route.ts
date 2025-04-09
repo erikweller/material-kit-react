@@ -5,6 +5,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/options';
 import { prisma } from '@/lib/db';
 
+
 export async function PUT(req: Request) {
   const session = await getServerSession(authOptions);
   console.log('🔥 SESSION:', session);
@@ -21,6 +22,10 @@ export async function PUT(req: Request) {
       where: { email },
       data: {
         age: body.age ? parseInt(body.age) : null,
+        gender: body.gender ?? null,
+        occupation: body.occupation ?? null,
+        otherOccupation: body.otherOccupation ?? null,
+        bestContactTime: body.bestContactTime ?? null,
         caregivingRole:
           body.caregivingRole === 'Other' ? body.otherCaregivingRole : body.caregivingRole,
         careRecipientAge: body.careRecipientAge ?? null,
@@ -37,3 +42,4 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });
   }
 }
+

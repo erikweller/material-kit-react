@@ -16,12 +16,14 @@ model User {
   age                     Int?
   caregivingRole          String?
   careRecipientAge        String?
+  careRecipientCondition  String?
   gender                  String?  // 👈 NEW
   occupation              String?  // 👈 NEW
   otherOccupation         String?  // 👈 NEW (if selected "Other")
   bestContactTime         String?  // 👈 NEW
   challenges              String[]
   communicationMethod     String?
+  phoneNumber             String?
   interests               String[]
   location                String?
   consultationZoomLink    String?

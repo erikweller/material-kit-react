@@ -2,6 +2,9 @@
 'use client';
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
 import useOnclickOutside from 'react-cool-onclickoutside';
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
+
 
 import {
   Box,
@@ -33,13 +36,15 @@ export default function UserInfoPage() {
     caregivingRole: '',
     otherCaregivingRole: '',
     careRecipientAge: '',
+    careRecipientCondition: '',
     challenges: [] as string[],
     communicationMethod: '',
+    phoneNumber: '',
     interests: [] as string[],
     location: '',
   });
 
-  const ageOptions = Array.from({ length: 82 }, (_, i) => (18 + i).toString());
+  const ageOptions = Array.from({ length: 105 }, (_, i) => (1 + i).toString());
 
   const handleArrayChange = (field: 'challenges' | 'interests', value: string) => {
     setFormData((prev) => ({
@@ -167,7 +172,7 @@ export default function UserInfoPage() {
               <Select name="occupation" value={formData.occupation} onChange={handleSelectChange} displayEmpty>
                 <MenuItem value="" disabled>Select...</MenuItem>
                 {[
-                  'Agriculture','Arts & Entertainment','Construction','Education','Finance','Government',
+                  'Agriculture','Arts & Entertainment','Construction','Education','Finance','Food and Beverage', 'Government',
                   'Healthcare','Hospitality','Information Technology','Legal','Manufacturing','Marketing & Sales',
                   'Media & Communications','Retail','Science & Research','Transportation','Trades & Services','Other'
                 ].map((occ) => <MenuItem key={occ} value={occ}>{occ}</MenuItem>)}
@@ -189,6 +194,8 @@ export default function UserInfoPage() {
             <FormControl fullWidth>
               <Select name="bestContactTime" value={formData.bestContactTime} onChange={handleSelectChange} displayEmpty>
                 <MenuItem value="" disabled>Select...</MenuItem>
+                <MenuItem value="Mornings">Mornings</MenuItem>
+                <MenuItem value="Afternoons">Afternoons</MenuItem>
                 <MenuItem value="Evenings">Evenings</MenuItem>
                 <MenuItem value="Weekends">Weekends</MenuItem>
                 <MenuItem value="Anytime">Anytime</MenuItem>
@@ -200,8 +207,8 @@ export default function UserInfoPage() {
               <Select name="caregivingRole" value={formData.caregivingRole} onChange={handleSelectChange} displayEmpty>
                 <MenuItem value="" disabled>Select...</MenuItem>
                 {[
-                  'Son/Daughter', 'Husband/Wife', 'Friend', 'Family', 'Social Worker',
-                  'Grandchild', 'Home Health Aide', 'Other'
+                  'Son/Daughter', 'Counselor', 'Family', 'Friend', 'Grandchild', 'Home Health Aide', 'Husband/Wife', 
+                  'Mental Health Professional', 'Social Worker', 'Other'
                 ].map((role) => <MenuItem key={role} value={role}>{role}</MenuItem>)}
               </Select>
             </FormControl>
@@ -225,14 +232,42 @@ export default function UserInfoPage() {
               </Select>
             </FormControl>
 
+            {renderFieldLabel('The person you care for is experiencing...')}
+              <FormControl fullWidth>
+                <Select
+                  name="careRecipientCondition"
+                  value={formData.careRecipientCondition}
+                  onChange={handleSelectChange}
+                  displayEmpty
+                >
+                <MenuItem value="" disabled>Select...</MenuItem>
+                {[
+                  'Allergies or Immune Deficiencies', 'Autoimmune Diseases', 'Behavioral Disorders', 
+                  'Burnout or Occupational Stress', 'Children with Special Needs', 'Chronic Illnesses', 
+                  'Dementia or Cognitive Issues', 'Domestic Violence Trauma', 'Eating Disorders', 
+                  'Elderly Individuals (General Aging)', 'Genetic Disorders', 'Homelessness or Poverty-Related Issues', 
+                  'Infectious Diseases', 'Intellectual or Developmental Disabilities', 'Mental Health Disorders', 
+                  'Multiple Co-occurring Conditions', 'Neurological Disorders', 'Obesity-Related Conditions', 
+                  'Physical Disabilities', 'Post Traumatic Stress Disorder (PTSD)', 'Post-Surgical Recovery', 
+                  'Rare Diseases', 'Respiratory Conditions', 'Sex/Gender-Related Health Needs', 'Sleep Disorders', 
+                  'Substance Abuse Issues', 'Terminal Illnesses', 'Traumatic Injuries', 'Vision or Hearing Loss (Age-Related)'
+                ].map((condition) => (
+                  <MenuItem key={condition} value={condition}>{condition}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
             {renderFieldLabel('Your Challenges')}
             <Box p={2} border="1px solid #ccc" borderRadius="12px">
               <FormGroup>
                 {[
-                  'Social Isolation','Financial Insecurity','Difficulty with Everyday Tasks and Mobility',
-                  'Access to Healthcare Services','Chronic Health Conditions','Ageism and Lack of Purpose',
-                  'Housing Challenges','Cognitive Decline and Dementia','Stress and Mental Health',
-                  'Time Management and Adaptation to Technology'
+                  'Emotional Stress', 'Physical Exhaustion', 'Time Management Difficulties', 'Financial Strain', 
+                  'Lack of Personal Time', 'Sleep Deprivation', 'Navigating Healthcare Systems', 
+                  'Dealing with Behavioral Changes', 'Communication Barriers', 'Social Isolation', 'Guilt or Self-Doubt', 
+                  'Unpredictable Schedules', 'Physical Safety Risks', 'Limited Access to Resources', 'Training or Skill Gaps', 
+                  'Balancing Multiple Roles', 'Coping with Decline or Loss', 
+                   'Adapting to Special Diets',  'Transportation Issues', 
+                  'Legal or Administrative Challenges'
                 ].map((challenge) => (
                   <FormControlLabel
                     key={challenge}
@@ -252,6 +287,40 @@ export default function UserInfoPage() {
                 ))}
               </Select>
             </FormControl>
+
+            <Box
+  mt={2}
+  sx={{
+    border: '1px solid #ccc',
+    borderRadius: '8px',
+    padding: '8px 12px',
+    transition: 'border-color 0.3s',
+    '&:focus-within': {
+      borderColor: 'primary.main',
+      boxShadow: (theme) => `0 0 0 2px ${theme.palette.primary.light}`,
+    },
+    '& input': {
+      fontSize: '1rem',
+      width: '100%',
+      border: 'none',
+      outline: 'none',
+    },
+  }}
+>
+  
+  <PhoneInput
+  
+    defaultCountry="US"
+    international
+    countryCallingCodeEditable={false}
+    value={formData.phoneNumber}
+    onChange={(value) =>
+      setFormData((prev) => ({ ...prev, phoneNumber: value || '' }))
+    }
+  />
+</Box>
+
+
 
             {renderFieldLabel('Your Interests')}
             <Box p={2} border="1px solid #ccc" borderRadius="12px">
