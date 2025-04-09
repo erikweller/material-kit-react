@@ -87,101 +87,96 @@ export function SignUpForm(): React.JSX.Element {
   };
 
   return (
-    <div className="min-h-screen bg-white text-black px-4 py-12 flex justify-center">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-xl p-8 space-y-6 text-black">
-        <Stack spacing={2}>
-          <div>
-            <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'black', mb: 1 }}>
-              Join CareVillage
-            </Typography>
-            <Typography sx={{ color: 'rgba(0, 0, 0, 0.7)' }}>
-              Already have an account?{' '}
-              <Link
-                component={RouterLink}
-                href={paths.auth.signIn}
-                underline="hover"
-                variant="subtitle2"
-                className="text-teal-600"
-              >
-                Sign in
-              </Link>
-            </Typography>
-          </div>
-
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <Controller
-              control={control}
-              name="firstName"
-              render={({ field }) => (
-                <FormControl fullWidth error={!!errors.firstName}>
-                  <InputLabel>First name</InputLabel>
-                  <OutlinedInput {...field} label="First name" />
-                  {errors.firstName && <FormHelperText>{errors.firstName.message}</FormHelperText>}
-                </FormControl>
-              )}
-            />
-            <Controller
-              control={control}
-              name="lastName"
-              render={({ field }) => (
-                <FormControl fullWidth error={!!errors.lastName}>
-                  <InputLabel>Last name</InputLabel>
-                  <OutlinedInput {...field} label="Last name" />
-                  {errors.lastName && <FormHelperText>{errors.lastName.message}</FormHelperText>}
-                </FormControl>
-              )}
-            />
-            <Controller
-              control={control}
-              name="email"
-              render={({ field }) => (
-                <FormControl fullWidth error={!!errors.email}>
-                  <InputLabel>Email address</InputLabel>
-                  <OutlinedInput {...field} label="Email address" type="email" />
-                  {errors.email && <FormHelperText>{errors.email.message}</FormHelperText>}
-                </FormControl>
-              )}
-            />
-            <Controller
-              control={control}
-              name="password"
-              render={({ field }) => (
-                <FormControl fullWidth error={!!errors.password}>
-                  <InputLabel>Password</InputLabel>
-                  <OutlinedInput {...field} label="Password" type="password" />
-                  {errors.password && <FormHelperText>{errors.password.message}</FormHelperText>}
-                </FormControl>
-              )}
-            />
-            <Controller
-              control={control}
-              name="terms"
-              render={({ field }) => (
-                <FormControl error={!!errors.terms}>
-                  <FormControlLabel
-                    control={<Checkbox {...field} />}
-                    label={
-                      <>
-                        I agree to the{' '}
-                        <Link href="#" className="text-teal-600">
-                          terms and conditions
-                        </Link>
-                      </>
-                    }
-                  />
-                  {errors.terms && <FormHelperText>{errors.terms.message}</FormHelperText>}
-                </FormControl>
-              )}
-            />
-            {errors.root && <Alert severity="error">{errors.root.message}</Alert>}
-            <Button type="submit" disabled={isPending} variant="contained" fullWidth>
-              {isPending ? 'Signing up…' : 'Sign up'}
-            </Button>
-          </form>
-
-          <Alert severity="info">Created users are now persisted in the DB ✅</Alert>
-        </Stack>
+    <Stack spacing={2}>
+      <div>
+        <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'black', mb: 1 }}>
+          Join CareVillage
+        </Typography>
+        <Typography sx={{ color: 'rgba(0, 0, 0, 0.7)' }}>
+          Already have an account?{' '}
+          <Link
+            component={RouterLink}
+            href={paths.auth.signIn}
+            underline="hover"
+            variant="subtitle2"
+            className="text-teal-600"
+            sx={{ color: '#233ea1' }}
+          >
+            Sign in
+          </Link>
+        </Typography>
       </div>
-    </div>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <Controller
+          control={control}
+          name="firstName"
+          render={({ field }) => (
+            <FormControl fullWidth error={!!errors.firstName}>
+              <InputLabel>First name</InputLabel>
+              <OutlinedInput {...field} label="First name" />
+              {errors.firstName && <FormHelperText>{errors.firstName.message}</FormHelperText>}
+            </FormControl>
+          )}
+        />
+        <Controller
+          control={control}
+          name="lastName"
+          render={({ field }) => (
+            <FormControl fullWidth error={!!errors.lastName}>
+              <InputLabel>Last name</InputLabel>
+              <OutlinedInput {...field} label="Last name" />
+              {errors.lastName && <FormHelperText>{errors.lastName.message}</FormHelperText>}
+            </FormControl>
+          )}
+        />
+        <Controller
+          control={control}
+          name="email"
+          render={({ field }) => (
+            <FormControl fullWidth error={!!errors.email}>
+              <InputLabel>Email address</InputLabel>
+              <OutlinedInput {...field} label="Email address" type="email" />
+              {errors.email && <FormHelperText>{errors.email.message}</FormHelperText>}
+            </FormControl>
+          )}
+        />
+        <Controller
+          control={control}
+          name="password"
+          render={({ field }) => (
+            <FormControl fullWidth error={!!errors.password}>
+              <InputLabel>Password</InputLabel>
+              <OutlinedInput {...field} label="Password" type="password" />
+              {errors.password && <FormHelperText>{errors.password.message}</FormHelperText>}
+            </FormControl>
+          )}
+        />
+        <Controller
+          control={control}
+          name="terms"
+          render={({ field }) => (
+            <FormControl error={!!errors.terms}>
+              <FormControlLabel
+                control={<Checkbox {...field} />}
+                label={
+                  <>
+                    I agree to the{' '}
+                    <Link href="#" className="text-teal-600" sx={{ color: '#233ea1' }}>
+                      terms and conditions
+                    </Link>
+                  </>
+                }
+              />
+              {errors.terms && <FormHelperText>{errors.terms.message}</FormHelperText>}
+            </FormControl>
+          )}
+        />
+        {errors.root && <Alert severity="error">{errors.root.message}</Alert>}
+        <Button type="submit" disabled={isPending} variant="contained" sx={{ background: '#233ea1' }} fullWidth>
+          {isPending ? 'Signing up…' : 'Sign up'}
+        </Button>
+      </form>
+    </Stack>
   );
 }

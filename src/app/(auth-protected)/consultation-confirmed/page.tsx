@@ -72,18 +72,34 @@ export default function ConsultationScheduledPage() {
   }, [scheduledTime]);
 
   return (
-    <Container maxWidth="md">
-      <Box display="flex" justifyContent="flex-end" mt={2}>
+    <main>
+    <div className="w-full bg-slate-900 text-white">
+    <header
+      style={{ backgroundColor: '#0f172a', width: '100%' }}
+      className="text-white px-8 py-5 shadow-sm"
+    >
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="text-2xl font-bold tracking-tight">CareVillage</div>
+        <div className="space-x-4">
+        <Box display="flex" justifyContent="flex-end" mt={2}>
   <Button
-    variant="outlined"
-    color="error"
-    size="small"
+    variant="text"
+    sx={{color: 'white'}}
+    size="large"
     onClick={() => signOut({ callbackUrl: '/auth/sign-in' })}
   >
     Logout
   </Button>
 </Box>
-      <Box textAlign="center" mt={8} mb={4}>
+        </div>
+      </div>
+    </header>
+  </div>
+    <Container maxWidth="lg">
+     
+      
+      
+      <Box sx={{marginBottom: '15vh', marginTop: '25vh'}} textAlign="center" mt={8} mb={4}>
         {scheduledTime ? (
           <>
             <Typography variant="h5" fontWeight={600} gutterBottom>
@@ -109,14 +125,14 @@ export default function ConsultationScheduledPage() {
       </Box>
 
       {/* Resources Section */}
-      <Typography variant="h6" mb={2}>
+      <Typography variant="h4"  mb={2}>
         Resources while you wait
       </Typography>
-      <Card sx={{ display: 'flex', mb: 2, cursor: 'pointer' }} onClick={() => setModalOpen(true)}>
+      <Card  sx={{ display: 'flex', mb: 2, width: '25vw', height: '30vh', marginTop: '25px', cursor: 'pointer' }} onClick={() => setModalOpen(true)}>
         <CardMedia
           component="img"
           sx={{ width: 160 }}
-          image="/images/tools-card.jpg"
+          image="/assets/mantra.png"
           alt="Tools to use while you wait"
         />
         <CardContent>
@@ -180,5 +196,6 @@ export default function ConsultationScheduledPage() {
         </Box>
       </Modal>
     </Container>
+    </main>
   );
 }

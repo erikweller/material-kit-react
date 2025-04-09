@@ -11,6 +11,9 @@ import {
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
+import Link from '@mui/material/Link';
+import RouterLink from 'next/link';
+import { paths } from '@/paths';
 
 export function SignInForm() {
   const router = useRouter();
@@ -56,11 +59,20 @@ export function SignInForm() {
   };
 
   return (
+    
     <Container maxWidth="sm">
       <Box mt={8}>
-        <Typography variant="h4" mb={2} color="black">
-          Sign In to CareVillage
+         <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'black', mb: 1 }}>
+                      Sign In To CareVillage
+                    </Typography>
+         <Typography color="text.secondary" variant="body2">
+          Don&apos;t have an account?{' '}
+          <Link sx={{color:'#233ea1'}} component={RouterLink} href={paths.auth.signUp} underline="hover" variant="subtitle2">
+            Sign up
+          </Link>
         </Typography>
+        
+        
         <form onSubmit={handleSubmit}>
           <TextField
             label="Email"
@@ -84,7 +96,7 @@ export function SignInForm() {
             </Alert>
           )}
           <Box mt={2}>
-            <Button fullWidth variant="contained" type="submit">
+            <Button fullWidth variant="contained" type="submit" sx={{background:'#233ea1'}}>
               Sign In
             </Button>
           </Box>

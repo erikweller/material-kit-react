@@ -18,12 +18,13 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
         flexDirection: 'column',
         gridTemplateColumns: '1fr 1fr',
         minHeight: '100vh',
-        backgroundColor: '#344780', // dark blue base
+        backgroundColor: '#1d2e61', // dark blue base
       }}
     >
       {/* Left: Sign Up Form Panel */}
       <Box
         sx={{
+          
           display: 'flex',
           flex: '1 1 auto',
           flexDirection: 'column',
@@ -31,6 +32,8 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
           justifyContent: 'center',
           alignItems: 'center',
           px: 5,
+          width: '100%',
+          
         }}
       >
         <Box
@@ -41,19 +44,20 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
             width: '100%',
             maxWidth: '650px',
             my: 8,
+            height: '80%',
             
             
             p: 4,
           }}
         >
-          <Box sx={{ mb: 3 }}>
+          <Box sx={{ mb: 2   }}>
             <Box component={RouterLink} href={paths.home} sx={{ display: 'inline-block' }}>
               <DynamicLogo colorDark="light" colorLight="dark" height={32} width={140} />
             </Box>
           </Box>
 
           {/* Form children */}
-          <Box>{children}</Box>
+          <Box >{children}</Box>
         </Box>
       </Box>
 
@@ -100,11 +104,11 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
             px: 4,
           }}
         >
-          <Box>
-            <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 2 }}>
+          <Box sx={{marginBottom: '60vh'}}>
+            <Typography variant="h1" sx={{ fontWeight: 'bold', mb: 2 }}>
               Welcome to CareVillage
             </Typography>
-            <Typography variant="subtitle1">
+            <Typography variant="h5">
               Helping caregivers connect, share, and grow together.
             </Typography>
           </Box>
