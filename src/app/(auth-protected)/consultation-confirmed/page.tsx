@@ -75,11 +75,14 @@ export default function ConsultationScheduledPage() {
     <main>
     <div className="w-full bg-slate-900 text-white">
     <header
-      style={{ backgroundColor: '#0f172a', width: '100%' }}
-      className="text-white px-8 py-5 shadow-sm"
-    >
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <div className="text-2xl font-bold tracking-tight">CareVillage</div>
+  style={{ backgroundColor: '#212e5e', width: '100%', height: '64px' }}
+  className="text-white shadow-sm"
+>
+  <div className="max-w-7xl mx-auto flex items-center justify-between h-full px-6">
+    <div className="text-2xl font-bold tracking-tight flex items-center h-full">
+      CareVillage
+    </div>
+
         <div className="space-x-4">
         <Box display="flex" justifyContent="flex-end" mt={2}>
   <Button
@@ -125,25 +128,156 @@ export default function ConsultationScheduledPage() {
       </Box>
 
       {/* Resources Section */}
-      <Typography variant="h4"  mb={2}>
-        Resources while you wait
+      <Typography variant="h4" mb={2}>
+  Resources while you wait
+</Typography>
+
+<Box
+  sx={{
+    display: 'flex',
+    justifyContent: 'center', // ✅ center the cards horizontally
+    gap: 4,
+    flexWrap: 'wrap',
+  }}
+>
+  {/* Card 1 */}
+  <Card
+    sx={{
+      display: 'flex',
+      width: 320,
+      height: 200,
+      cursor: 'pointer',
+    }}
+    onClick={() => setModalOpen(true)}
+  >
+    <CardMedia
+      component="img"
+      sx={{ width: 140 }}
+      image="/assets/mantra.png"
+      alt="Tools to use while you wait"
+    />
+    <CardContent>
+      <Typography component="div" variant="h6">
+        Tools to use while you wait
       </Typography>
-      <Card  sx={{ display: 'flex', mb: 2, width: '25vw', height: '30vh', marginTop: '25px', cursor: 'pointer' }} onClick={() => setModalOpen(true)}>
-        <CardMedia
-          component="img"
-          sx={{ width: 160 }}
-          image="/assets/mantra.png"
-          alt="Tools to use while you wait"
-        />
-        <CardContent>
-          <Typography component="div" variant="h6">
-            Tools to use while you wait
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Mantras, exercises and other techniques for handling the challenges of caring for a loved one or client
-          </Typography>
-        </CardContent>
-      </Card>
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        sx={{
+          display: '-webkit-box',
+          WebkitLineClamp: 3,
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden',
+        }}
+      >
+        Mantras, exercises and other techniques for handling the challenges of caring for a loved one or client.
+      </Typography>
+      <Typography
+        variant="body2"
+        sx={{ color: '#212e5e', mt: 1, cursor: 'pointer' }}
+        onClick={() => setModalOpen(true)}
+      >
+        more
+      </Typography>
+    </CardContent>
+  </Card>
+
+  {/* Card 2 */}
+  <Card
+    sx={{
+      display: 'flex',
+      width: 320,
+      height: 200,
+      cursor: 'pointer',
+    }}
+    onClick={() =>
+      window.open(
+        'https://www.mayoclinic.org/healthy-lifestyle/stress-management/in-depth/support-groups/art-20044655',
+        '_blank'
+      )
+    }
+  >
+    <CardMedia
+      component="img"
+      sx={{ width: 140 }}
+      image="/assets/Stress.png"
+      alt="Support groups"
+      
+    />
+    <CardContent sx={{ background: '#f9f9fa' }}>
+      <Typography component="div" variant="h6" >
+        Support groups: Make connections, get help
+      </Typography>
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        sx={{
+          display: '-webkit-box',
+          WebkitLineClamp: 3,
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden',
+        }}
+      >
+        If you're facing a major illness or stressful life change, you don't have to go it alone. A support group can help. Find out how to choose the right one.
+      </Typography>
+      <Typography
+        variant="body2"
+        sx={{ color: '#212e5e', mt: 1 }}
+      >
+        more
+      </Typography>
+    </CardContent>
+  </Card>
+
+  {/* Card 3 */}
+  <Card
+    sx={{
+      display: 'flex',
+      width: 320,
+      height: 200,
+      cursor: 'pointer',
+    }}
+    onClick={() =>
+      window.open(
+        'https://www.health.harvard.edu/blog/self-care-for-the-caregiver-201810171716',
+        '_blank'
+      )
+    }
+  >
+    <CardMedia
+      component="img"
+      sx={{ width: 140 }}
+      image="/assets/SelfCare.png"
+      alt="Self-care for caregivers"
+    />
+    <CardContent>
+      <Typography component="div" variant="h6">
+        Self-care for the caregiver
+      </Typography>
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        sx={{
+          display: '-webkit-box',
+          WebkitLineClamp: 3,
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden',
+        }}
+      >
+        5 ways to care for yourself if you are a caregiver. These small steps can protect your health, energy, and emotional wellbeing.
+      </Typography>
+      <Typography
+        variant="body2"
+        sx={{ color: '#212e5e', mt: 1 }}
+      >
+        more
+      </Typography>
+    </CardContent>
+  </Card>
+</Box>
+
+
+
 
       {/* Modal */}
       <Modal open={modalOpen} onClose={() => setModalOpen(false)}>

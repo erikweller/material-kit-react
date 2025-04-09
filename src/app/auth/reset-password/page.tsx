@@ -4,15 +4,26 @@ import type { Metadata } from 'next';
 import { config } from '@/config';
 import { GuestGuard } from '@/components/auth/guest-guard';
 import { Layout } from '@/components/auth/layout';
-import { ResetPasswordForm } from '@/components/auth/reset-password-form';
+import ResetPasswordForm from '@/components/auth/reset-password-form';
+import SetNewPasswordForm from '@/components/auth/set-new-password-form';
 
-export const metadata = { title: `Reset password | Auth | ${config.site.name}` } satisfies Metadata;
+export const metadata: Metadata = {
+  title: `Reset password | Auth | ${config.site.name}`,
+};
 
-export default function Page(): React.JSX.Element {
+export default function Page({
+  searchParams,
+}: {
+  searchParams: { token?: string };
+}): React.JSX.Element {
   return (
     <Layout>
       <GuestGuard>
-        <ResetPasswordForm />
+        {searchParams?.token ? (
+          <SetNewPasswordForm token={searchParams.token} />
+        ) : (
+          <ResetPasswordForm />
+        )}
       </GuestGuard>
     </Layout>
   );

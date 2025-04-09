@@ -34,4 +34,16 @@ model User {
   accepted                Boolean   @default(false)
   createdAt               DateTime @default(now())
   updatedAt               DateTime @updatedAt
+  passwordResetTokens PasswordResetToken[]
+
+}
+
+
+model PasswordResetToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int                              // ✅ MUST match User.id type
+  user      User     @relation(fields: [userId], references: [id])
+  expires   DateTime
+  createdAt DateTime @default(now())
 }

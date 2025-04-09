@@ -90,6 +90,17 @@ export function SignInForm() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          <Box mt={1} textAlign="right">
+          <Link
+            component={RouterLink}
+            href={paths.auth.resetPassword} // make sure this path exists
+            underline="hover"
+            variant="subtitle2"
+            sx={{ color: '#233ea1' }}
+          >
+            Forgot password?
+          </Link>
+        </Box>
           {error && (
             <Alert severity="error" sx={{ mt: 2 }}>
               {error}

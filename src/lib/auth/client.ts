@@ -38,12 +38,8 @@ export interface ResetPasswordParams {
 
 class AuthClient {
   async signUp(_: SignUpParams): Promise<{ error?: string }> {
-    // Make API request
-
-    // We do not handle the API, so we'll just generate a token and store it in localStorage.
     const token = generateToken();
     localStorage.setItem('custom-auth-token', token);
-
     return {};
   }
 
@@ -54,21 +50,33 @@ class AuthClient {
   async signInWithPassword(params: SignInWithPasswordParams): Promise<{ error?: string }> {
     const { email, password } = params;
 
-    // Make API request
-
-    // We do not handle the API, so we'll check if the credentials match with the hardcoded ones.
     if (email !== 'sofia@devias.io' || password !== 'Secret1') {
       return { error: 'Invalid credentials' };
     }
 
     const token = generateToken();
     localStorage.setItem('custom-auth-token', token);
-
     return {};
   }
 
-  async resetPassword(_: ResetPasswordParams): Promise<{ error?: string }> {
-    return { error: 'Password reset not implemented' };
+  async resetPassword(params: ResetPasswordParams): Promise<{ error?: string }> {
+    try {
+      const res = await fetch('/api/auth/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: params.email }),
+      });
+
+      if (!res.ok) {
+        const { error } = await res.json();
+        return { error };
+      }
+
+      return {};
+    } catch (err) {
+      console.error('❌ resetPassword error:', err);
+      return { error: 'Something went wrong. Please try again later.' };
+    }
   }
 
   async updatePassword(_: ResetPasswordParams): Promise<{ error?: string }> {
@@ -76,21 +84,13 @@ class AuthClient {
   }
 
   async getUser(): Promise<{ data?: User | null; error?: string }> {
-    // Make API request
-
-    // We do not handle the API, so just check if we have a token in localStorage.
     const token = localStorage.getItem('custom-auth-token');
-
-    if (!token) {
-      return { data: null };
-    }
-
+    if (!token) return { data: null };
     return { data: user };
   }
 
   async signOut(): Promise<{ error?: string }> {
     localStorage.removeItem('custom-auth-token');
-
     return {};
   }
 }
