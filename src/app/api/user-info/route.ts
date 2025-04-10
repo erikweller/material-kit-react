@@ -5,7 +5,6 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/options';
 import { prisma } from '@/lib/db';
 
-
 export async function PUT(req: Request) {
   const session = await getServerSession(authOptions);
   console.log('🔥 SESSION:', session);
@@ -18,23 +17,47 @@ export async function PUT(req: Request) {
     const body = await req.json();
     const email = session.user.email;
 
+    const {
+      age,
+      gender,
+      occupation,
+      otherOccupation,
+      bestContactTime,
+      caregivingRole,
+      otherCaregivingRole,
+      careRecipientAge,
+      careRecipientCondition,
+      challenges,
+      communicationMethod,
+      phoneNumber,
+      interests,
+      location,
+      consultationZoomLink,
+      consultationScheduledAt,
+      calendlyRescheduleUrl,
+      calendlyCancelUrl,
+    } = body;
+
     const user = await prisma.user.update({
       where: { email },
       data: {
-        age: body.age ? parseInt(body.age) : null,
-        gender: body.gender ?? null,
-        occupation: body.occupation ?? null,
-        otherOccupation: body.otherOccupation ?? null,
-        bestContactTime: body.bestContactTime ?? null,
-        caregivingRole:
-          body.caregivingRole === 'Other' ? body.otherCaregivingRole : body.caregivingRole,
-        careRecipientAge: body.careRecipientAge ?? null,
-        careRecipientCondition: body.careRecipientCondition ?? null,
-        challenges: Array.isArray(body.challenges) ? body.challenges.flat() : [],
-        communicationMethod: body.communicationMethod ?? null,
-        phoneNumber: body.phoneNumber ?? null,
-        interests: Array.isArray(body.interests) ? body.interests.flat() : [],
-        location: body.location ?? null,
+        age: age ? parseInt(age) : null,
+        gender: gender ?? null,
+        occupation: occupation ?? null,
+        otherOccupation: otherOccupation ?? null,
+        bestContactTime: bestContactTime ?? null,
+        caregivingRole: caregivingRole === 'Other' ? otherCaregivingRole : caregivingRole,
+        careRecipientAge: careRecipientAge ?? null,
+        careRecipientCondition: careRecipientCondition ?? null,
+        challenges: Array.isArray(challenges) ? challenges.flat() : [],
+        communicationMethod: communicationMethod ?? null,
+        phoneNumber: phoneNumber ?? null,
+        interests: Array.isArray(interests) ? interests.flat() : [],
+        location: location ?? null,
+        consultationZoomLink: consultationZoomLink ?? null,
+        consultationScheduledAt: consultationScheduledAt ? new Date(consultationScheduledAt) : null,
+        calendlyRescheduleUrl: calendlyRescheduleUrl ?? null,
+        calendlyCancelUrl: calendlyCancelUrl ?? null,
       },
     });
 
@@ -44,4 +67,3 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });
   }
 }
-

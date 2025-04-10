@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Box } from '@mui/material';
 
 // Declare global Calendly object
 declare global {
@@ -74,23 +75,23 @@ export default function ScheduleConsultation() {
     <main className="min-h-screen bg-white font-sans">
       {/* Header */}
       <div className="w-full bg-slate-900 text-white">
-  <header
-    style={{ backgroundColor: '#0f172a' }}
-    className="text-white px-8 py-5 shadow-sm"
-  >
-    <div className="max-w-7xl mx-auto flex items-center justify-between">
-      <div className="text-2xl font-bold tracking-tight">CareVillage</div>
-      <div className="space-x-4">
-        <a
-          href="/logout"
-          className="hover:text-teal-400 transition-colors"
-        >
-          Logout
-        </a>
-      </div>
-    </div>
-  </header>
-</div>
+          <header
+        style={{ backgroundColor: '#212e5e', width: '100%', height: '64px' }}
+        className="text-white shadow-sm"
+      >
+        <div className="max-w-7xl mx-auto flex items-center justify-between h-full px-6">
+          <div className="text-2xl font-bold tracking-tight flex items-center h-full">
+            CareVillage
+          </div>
+      
+              <div className="space-x-4">
+              <Box display="flex" justifyContent="flex-end" mt={2}>
+        
+      </Box>
+              </div>
+            </div>
+          </header>
+        </div>
 
 
       {/* Content */}

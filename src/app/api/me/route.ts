@@ -24,9 +24,11 @@ export async function GET() {
       careRecipientAge: true,
       challenges: true,
       communicationMethod: true,
+      consultationScheduledAt: true, 
+      consultationZoomLink: true,  
       interests: true,
       location: true,
-      accepted: true, // ✅ Include accepted here
+      accepted: true, 
     },
   });
 

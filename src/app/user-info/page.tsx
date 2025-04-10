@@ -42,8 +42,13 @@ export default function UserInfoPage() {
     phoneNumber: '',
     interests: [] as string[],
     location: '',
+    consultationZoomLink: '',
+    consultationScheduledAt: '',
+    calendlyRescheduleUrl: '',
+    calendlyCancelUrl: '',
   });
 
+  const yourAgeOptions = Array.from({ length: 83 }, (_, i) => (18 + i).toString());
   const ageOptions = Array.from({ length: 105 }, (_, i) => (1 + i).toString());
 
   const handleArrayChange = (field: 'challenges' | 'interests', value: string) => {
@@ -139,11 +144,24 @@ export default function UserInfoPage() {
 
   return (
     <>
-      <AppBar position="static" sx={{ backgroundColor: '#111729' }}>
-        <Toolbar>
-          <Typography variant="h6">CareVillage</Typography>
-        </Toolbar>
-      </AppBar>
+       <div className="w-full bg-slate-900 text-white">
+          <header
+        style={{ backgroundColor: '#212e5e', width: '100%', height: '64px' }}
+        className="text-white shadow-sm"
+      >
+        <div className="max-w-7xl mx-auto flex items-center justify-between h-full px-6">
+          <div className="text-2xl font-bold tracking-tight flex items-center h-full">
+            CareVillage
+          </div>
+      
+              <div className="space-x-4">
+              <Box display="flex" justifyContent="flex-end" mt={2}>
+        
+      </Box>
+              </div>
+            </div>
+          </header>
+        </div>
 
       <Container maxWidth="sm">
         <Box mt={4} sx={{ color: 'black' }}>
@@ -154,7 +172,7 @@ export default function UserInfoPage() {
             <FormControl fullWidth>
               <Select name="age" value={formData.age} onChange={handleSelectChange} displayEmpty>
                 <MenuItem value="" disabled>Select...</MenuItem>
-                {ageOptions.map((age) => <MenuItem key={age} value={age}>{age}</MenuItem>)}
+                {yourAgeOptions.map((age) => <MenuItem key={age} value={age}>{age}</MenuItem>)}
               </Select>
             </FormControl>
 
@@ -174,7 +192,7 @@ export default function UserInfoPage() {
                 {[
                   'Agriculture','Arts & Entertainment','Construction','Education','Finance','Food and Beverage', 'Government',
                   'Healthcare','Hospitality','Information Technology','Legal','Manufacturing','Marketing & Sales',
-                  'Media & Communications','Retail','Science & Research','Transportation','Trades & Services','Other'
+                  'Media & Communications','Retail','Science & Research','Social Services', 'Transportation','Trades & Services','Other'
                 ].map((occ) => <MenuItem key={occ} value={occ}>{occ}</MenuItem>)}
               </Select>
             </FormControl>
@@ -353,11 +371,23 @@ export default function UserInfoPage() {
               )}
             </Box>
 
-            <Box mt={3}>
-              <Button type="submit" variant="contained" fullWidth>
-                Schedule Consultation
-              </Button>
-            </Box>
+            <Box mt={3} mb={6}>
+  <Button
+    type="submit"
+    variant="contained"
+    fullWidth
+    sx={{
+      marginBottom: '100px', // more vertical height
+      fontSize: '1.1rem', // optional: slightly larger text
+      backgroundColor: '#233ea1',
+      '&:hover': {
+        backgroundColor: '#1b2f84',
+      },
+    }}
+  >
+    Schedule Consultation
+  </Button>
+</Box>
           </form>
         </Box>
       </Container>

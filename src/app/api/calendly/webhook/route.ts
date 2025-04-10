@@ -6,15 +6,16 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    console.log('📩 Calendly webhook received:', JSON.stringify(body, null, 2));
-
-    const event = body.event;
     const payload = body.payload;
+    const event = body.event;
 
     if (!payload) {
       console.error('❌ No payload in webhook');
       return NextResponse.json({ status: 'ignored' });
     }
+
+    console.log('📩 Calendly webhook received:', JSON.stringify(payload, null, 2));
+    console.log('🕒 Scheduled event:', JSON.stringify(payload?.scheduled_event, null, 2));
 
     const email = payload.email;
     const name = payload.name || 'there';
@@ -24,8 +25,8 @@ export async function POST(req: NextRequest) {
     const cancelUrl = payload.cancel_url || null;
     const scheduledTime = scheduledEvent?.start_time || null;
 
-    if (!email || !joinUrl) {
-      console.warn('⚠️ Missing email or Zoom join URL');
+    if (!email || !joinUrl || !scheduledTime) {
+      console.warn('⚠️ Missing email, Zoom join URL, or scheduled time');
       return NextResponse.json({ status: 'ignored' });
     }
 
@@ -40,13 +41,14 @@ export async function POST(req: NextRequest) {
       where: { email },
       data: {
         consultationZoomLink: joinUrl,
-        consultationScheduledAt: scheduledTime,
+        consultationScheduledAt: new Date(scheduledTime), // ✅ Convert to Date object
         calendlyRescheduleUrl: rescheduleUrl,
         calendlyCancelUrl: cancelUrl,
       },
     });
 
     console.log(`✅ Zoom link saved for ${user.email}: ${joinUrl}`);
+    console.log(`📆 Saved consultationScheduledAt: ${new Date(scheduledTime).toISOString()}`);
 
     const firstName = name.split(' ')[0] || 'there';
     await resend.emails.send({
@@ -73,7 +75,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('❌ Webhook handler error:', error); // <— This is the key line
+    console.error('❌ Webhook handler error:', error);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }

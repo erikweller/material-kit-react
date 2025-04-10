@@ -1,7 +1,7 @@
 'use client';
 
-//test
 import {
+  AppBar,
   Box,
   Button,
   Card,
@@ -9,11 +9,11 @@ import {
   CardMedia,
   Container,
   Modal,
+  Toolbar,
   Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useSession, signOut } from 'next-auth/react';
-
 import { useRouter } from 'next/navigation';
 import dayjs from 'dayjs';
 
@@ -23,28 +23,43 @@ export default function ConsultationScheduledPage() {
 
   const [consultation, setConsultation] = useState<any | null>(null);
   const [scheduledTime, setScheduledTime] = useState<Date | null>(null);
-  const [timeLeft, setTimeLeft] = useState('');
   const [showJoinButton, setShowJoinButton] = useState(false);
+  const [meetingStarted, setMeetingStarted] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+
+  const [timeLeft, setTimeLeft] = useState<{ days: number; hours: number; minutes: number } | null>(null);
 
   useEffect(() => {
     const fetchConsultation = async () => {
       try {
         const res = await fetch('/api/me');
+        
         if (!res.ok) throw new Error(`❌ /api/me returned status ${res.status}`);
-
+  
         const data = await res.json();
-        console.log('🧾 Data from /api/me in consultation-confirmed:', data);
-
+        console.log('👀 /api/me response:', data); // ✅ DEBUG
         setConsultation(data);
-        if (data.consultationScheduledAt) {
-          setScheduledTime(new Date(data.consultationScheduledAt));
-        }
+        console.log('👤 consultation data:', data);
+        console.log('🔥 scheduledAt:', data.consultationScheduledAt);
+
+
+        
+  
+        
+
+      if (data.consultationScheduledAt) {
+        const date = new Date(data.consultationScheduledAt);
+        console.log('📆 Parsed scheduledTime:', date); // ✅ DEBUG
+        setScheduledTime(date);
+      } else {
+        console.warn('⚠️ consultationScheduledAt is missing or null');
+      }
+
       } catch (error) {
         console.error('❌ Consultation-confirmed page fetch error:', error);
       }
     };
-
+  
     fetchConsultation();
   }, []);
 
@@ -57,14 +72,14 @@ export default function ConsultationScheduledPage() {
 
       if (distance <= 0) {
         setShowJoinButton(true);
-        setTimeLeft('Your meeting is beginning now.');
+        setMeetingStarted(true);
+        setTimeLeft(null);
         clearInterval(interval);
       } else {
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
         const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
         const minutes = Math.floor((distance / 1000 / 60) % 60);
-        const seconds = Math.floor((distance / 1000) % 60);
-        setTimeLeft(`${days}D ${hours}H ${minutes}M ${seconds}S`);
+        setTimeLeft({ days, hours, minutes });
       }
     }, 1000);
 
@@ -73,43 +88,109 @@ export default function ConsultationScheduledPage() {
 
   return (
     <main>
-    <div className="w-full bg-slate-900 text-white">
-    <header
-  style={{ backgroundColor: '#212e5e', width: '100%', height: '64px' }}
-  className="text-white shadow-sm"
->
-  <div className="max-w-7xl mx-auto flex items-center justify-between h-full px-6">
-    <div className="text-2xl font-bold tracking-tight flex items-center h-full">
-      CareVillage
-    </div>
+      <AppBar position="static" sx={{ backgroundColor: '#212e5e' }}>
+        <Toolbar sx={{ justifyContent: 'space-between' }}>
+          <Typography variant="h6" fontWeight={700}>CareVillage</Typography>
+          <Box display="flex" alignItems="center"  gap={4} sx={{marginRight: '10vh'}}>
+            <Typography sx={{marginRight: '18vh'}} >Personal Assistant</Typography>
+            <Button variant="text" sx={{
+    color: 'white',
+    '&:hover': {
+      backgroundColor: 'transparent',
+      
+    },
+  }} onClick={() => signOut({ callbackUrl: '/auth/sign-in' })}>
+              Logout
+            </Button>
+          </Box>
+        </Toolbar>
+      </AppBar>
 
-        <div className="space-x-4">
-        <Box display="flex" justifyContent="flex-end" mt={2}>
-  <Button
-    variant="text"
-    sx={{color: 'white'}}
-    size="large"
-    onClick={() => signOut({ callbackUrl: '/auth/sign-in' })}
-  >
-    Logout
-  </Button>
-</Box>
-        </div>
-      </div>
-    </header>
-  </div>
-    <Container maxWidth="lg">
-     
-      
-      
-      <Box sx={{marginBottom: '15vh', marginTop: '25vh'}} textAlign="center" mt={8} mb={4}>
-        {scheduledTime ? (
-          <>
-            <Typography variant="h5" fontWeight={600} gutterBottom>
-              Your Consultation has been scheduled for {dayjs(scheduledTime).format('MMMM D, YYYY [at] h:mm A')}
+      <Container maxWidth="lg">
+        <Box display="flex" justifyContent="space-between" mt={6}>
+          <Box width="60%">
+            <Typography variant="h3" fontWeight={600} gutterBottom>
+              Thank you for signing up
             </Typography>
-            <Typography variant="body1" color="textSecondary">
-              You have {timeLeft} until your meeting.
+            <Typography paragraph>
+              We are very excited to meet you. You are currently being paired with a group and will meet your leader soon.
+            </Typography>
+            <Typography paragraph>
+              While you wait for your consultation we have included some resources for you as well as free access to our personal assistant tool.
+            </Typography>
+            
+
+            <Typography variant="h5" sx={{marginTop: '12vh'}} mt={4} mb={2}>Resources While You Wait</Typography>
+            <Box display="flex" gap={2}>
+              {/* Card 1 */}
+              <Card sx={{ width: 300, cursor: 'pointer' }} onClick={() => setModalOpen(true)}>
+                <CardContent>
+                  <CardMedia
+                    component="img"
+                    height="100"
+                    image="/assets/mantra.png"
+                    alt="Tools"
+                    sx={{ objectFit: 'contain' }}
+                  />
+                  <Typography variant="h6">Tools to use while you wait</Typography>
+                  <Typography variant="body2">Apps and other techniques for making the time go faster</Typography>
+                </CardContent>
+              </Card>
+              {/* Card 2 */}
+              <Card sx={{ width: 300, cursor: 'pointer' }} onClick={() => window.open('https://www.mayoclinic.org/healthy-lifestyle/stress-management/in-depth/support-groups/art-20044655', '_blank')}>
+                <CardContent>
+                  <CardMedia
+                    component="img"
+                    height="100"
+                    image="/assets/Stress.png"
+                    alt="Support"
+                    sx={{ objectFit: 'contain' }}
+                  />
+                  <Typography variant="h6">Support groups: Make connections, get help</Typography>
+                  <Typography variant="body2">How the right group can make a difference</Typography>
+                </CardContent>
+              </Card>
+              {/* Card 3 */}
+              <Card sx={{ width: 300, cursor: 'pointer', backgroundColor: '#fffbe6' }} onClick={() => window.open('https://www.health.harvard.edu/blog/self-care-for-the-caregiver-201810171716', '_blank')}>
+                <CardContent>
+                  <CardMedia
+                    component="img"
+                    height="100"
+                    image="/assets/SelfCare.png"
+                    alt="Self-care"
+                    sx={{ objectFit: 'contain' }}
+                  />
+                  <Typography variant="h6">Self-care for caregiver</Typography>
+                  <Typography variant="body2">What works for you? Try these methods to maintain balance</Typography>
+                </CardContent>
+              </Card>
+            </Box>
+          </Box>
+
+          <Box width="35%" textAlign="center">
+            <Typography variant="h6" fontWeight={600}>YOUR MEETING IS SCHEDULED</Typography>
+            {meetingStarted ? (
+              <Typography mt={2} fontWeight={600}>Your meeting is beginning now.</Typography>
+            ) : timeLeft ? (
+              <Box display="flex" justifyContent="center" mt={2} mb={1} gap={1}>
+                <Box border={1} p={2} borderRadius={2} minWidth={80}>
+                  <Typography variant="h5" fontWeight={700}>{timeLeft.days.toString().padStart(2, '0')}</Typography>
+                  <Typography variant="caption">DAYS</Typography>
+                </Box>
+                <Box border={1} p={2} borderRadius={2} minWidth={80}>
+                  <Typography variant="h5" fontWeight={700}>{timeLeft.hours.toString().padStart(2, '0')}</Typography>
+                  <Typography variant="caption">HOURS</Typography>
+                </Box>
+                <Box border={1} p={2} borderRadius={2} minWidth={80}>
+                  <Typography variant="h5" fontWeight={700}>{timeLeft.minutes.toString().padStart(2, '0')}</Typography>
+                  <Typography variant="caption">MINUTES</Typography>
+                </Box>
+              </Box>
+            ) : (
+              <Typography>Loading...</Typography>
+            )}
+            <Typography variant="h4" fontWeight={700} mt={1}>
+              {scheduledTime && dayjs(scheduledTime).format('MMMM D, YYYY')}
             </Typography>
             {showJoinButton && (
               <Button
@@ -121,215 +202,60 @@ export default function ConsultationScheduledPage() {
                 Click to Join Meeting
               </Button>
             )}
-          </>
-        ) : (
-          <Typography variant="h6">Loading consultation details...</Typography>
-        )}
-      </Box>
-
-      {/* Resources Section */}
-      <Typography variant="h4" mb={2}>
-  Resources while you wait
-</Typography>
-
-<Box
-  sx={{
-    display: 'flex',
-    justifyContent: 'center', // ✅ center the cards horizontally
-    gap: 4,
-    flexWrap: 'wrap',
-  }}
->
-  {/* Card 1 */}
-  <Card
-    sx={{
-      display: 'flex',
-      width: 320,
-      height: 200,
-      cursor: 'pointer',
-    }}
-    onClick={() => setModalOpen(true)}
-  >
-    <CardMedia
-      component="img"
-      sx={{ width: 140 }}
-      image="/assets/mantra.png"
-      alt="Tools to use while you wait"
-    />
-    <CardContent>
-      <Typography component="div" variant="h6">
-        Tools to use while you wait
-      </Typography>
-      <Typography
-        variant="body2"
-        color="text.secondary"
-        sx={{
-          display: '-webkit-box',
-          WebkitLineClamp: 3,
-          WebkitBoxOrient: 'vertical',
-          overflow: 'hidden',
-        }}
-      >
-        Mantras, exercises and other techniques for handling the challenges of caring for a loved one or client.
-      </Typography>
-      <Typography
-        variant="body2"
-        sx={{ color: '#212e5e', mt: 1, cursor: 'pointer' }}
-        onClick={() => setModalOpen(true)}
-      >
-        more
-      </Typography>
-    </CardContent>
-  </Card>
-
-  {/* Card 2 */}
-  <Card
-    sx={{
-      display: 'flex',
-      width: 320,
-      height: 200,
-      cursor: 'pointer',
-    }}
-    onClick={() =>
-      window.open(
-        'https://www.mayoclinic.org/healthy-lifestyle/stress-management/in-depth/support-groups/art-20044655',
-        '_blank'
-      )
-    }
-  >
-    <CardMedia
-      component="img"
-      sx={{ width: 140 }}
-      image="/assets/Stress.png"
-      alt="Support groups"
-      
-    />
-    <CardContent sx={{ background: '#f9f9fa' }}>
-      <Typography component="div" variant="h6" >
-        Support groups: Make connections, get help
-      </Typography>
-      <Typography
-        variant="body2"
-        color="text.secondary"
-        sx={{
-          display: '-webkit-box',
-          WebkitLineClamp: 3,
-          WebkitBoxOrient: 'vertical',
-          overflow: 'hidden',
-        }}
-      >
-        If you're facing a major illness or stressful life change, you don't have to go it alone. A support group can help. Find out how to choose the right one.
-      </Typography>
-      <Typography
-        variant="body2"
-        sx={{ color: '#212e5e', mt: 1 }}
-      >
-        more
-      </Typography>
-    </CardContent>
-  </Card>
-
-  {/* Card 3 */}
-  <Card
-    sx={{
-      display: 'flex',
-      width: 320,
-      height: 200,
-      cursor: 'pointer',
-    }}
-    onClick={() =>
-      window.open(
-        'https://www.health.harvard.edu/blog/self-care-for-the-caregiver-201810171716',
-        '_blank'
-      )
-    }
-  >
-    <CardMedia
-      component="img"
-      sx={{ width: 140 }}
-      image="/assets/SelfCare.png"
-      alt="Self-care for caregivers"
-    />
-    <CardContent>
-      <Typography component="div" variant="h6">
-        Self-care for the caregiver
-      </Typography>
-      <Typography
-        variant="body2"
-        color="text.secondary"
-        sx={{
-          display: '-webkit-box',
-          WebkitLineClamp: 3,
-          WebkitBoxOrient: 'vertical',
-          overflow: 'hidden',
-        }}
-      >
-        5 ways to care for yourself if you are a caregiver. These small steps can protect your health, energy, and emotional wellbeing.
-      </Typography>
-      <Typography
-        variant="body2"
-        sx={{ color: '#212e5e', mt: 1 }}
-      >
-        more
-      </Typography>
-    </CardContent>
-  </Card>
-</Box>
-
-
-
-
-      {/* Modal */}
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: '90%',
-            maxWidth: 600,
-            bgcolor: 'background.paper',
-            boxShadow: 24,
-            p: 4,
-            borderRadius: 2,
-          }}
-        >
-          <Typography variant="h6" gutterBottom>
-            Mantras for Caregivers
-          </Typography>
-          <Typography>“I am doing my best”</Typography>
-          <Typography>“One day at a time”</Typography>
-
-          <Box mt={2}>
-            <Typography variant="h6" gutterBottom>
-              Box Breathing
-            </Typography>
-            <Typography>
-              Inhale for four seconds, hold for four seconds, exhale for four seconds, and hold for four seconds.
-            </Typography>
-          </Box>
-
-          <Box mt={2}>
-            <Typography variant="h6" gutterBottom>
-              Chest Rub Exercise
-            </Typography>
-            <Typography>
-              Close your eyes and rub your chest in a circular motion while breathing deeply. Repeat when overwhelmed or before entering stressful situations.
-            </Typography>
-          </Box>
-
-          <Box mt={2}>
-            <Typography variant="h6" gutterBottom>
-              Enter Their Reality
-            </Typography>
-            <Typography>
-              Your loved one may be experiencing something that isn’t real to you. Try not to contradict them or take their behaviors personally.
-            </Typography>
           </Box>
         </Box>
-      </Modal>
-    </Container>
+
+        {/* Modal */}
+        <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '90%',
+              maxWidth: 600,
+              bgcolor: 'background.paper',
+              boxShadow: 24,
+              p: 4,
+              borderRadius: 2,
+            }}
+          >
+            <Typography variant="h6" gutterBottom>
+              Mantras for Caregivers
+            </Typography>
+            <Typography>“I am doing my best”</Typography>
+            <Typography>“One day at a time”</Typography>
+
+            <Box mt={2}>
+              <Typography variant="h6" gutterBottom>
+                Box Breathing
+              </Typography>
+              <Typography>
+                Inhale for four seconds, hold for four seconds, exhale for four seconds, and hold for four seconds.
+              </Typography>
+            </Box>
+
+            <Box mt={2}>
+              <Typography variant="h6" gutterBottom>
+                Chest Rub Exercise
+              </Typography>
+              <Typography>
+                Close your eyes and rub your chest in a circular motion while breathing deeply. Repeat when overwhelmed or before entering stressful situations.
+              </Typography>
+            </Box>
+
+            <Box mt={2}>
+              <Typography variant="h6" gutterBottom>
+                Enter Their Reality
+              </Typography>
+              <Typography>
+                Your loved one may be experiencing something that isn’t real to you. Try not to contradict them or take their behaviors personally.
+              </Typography>
+            </Box>
+          </Box>
+        </Modal>
+      </Container>
     </main>
   );
 }
