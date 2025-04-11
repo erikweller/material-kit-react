@@ -26,40 +26,63 @@ export default function ConsultationScheduledPage() {
   const [showJoinButton, setShowJoinButton] = useState(false);
   const [meetingStarted, setMeetingStarted] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [devTimeBumped, setDevTimeBumped] = useState(false);
 
-  const [timeLeft, setTimeLeft] = useState<{ days: number; hours: number; minutes: number } | null>(null);
+  const [timeLeft, setTimeLeft] = useState<{ days: number; hours: number; minutes: number; seconds: number } | null>(null);
 
   useEffect(() => {
     const fetchConsultation = async () => {
       try {
         const res = await fetch('/api/me');
-        
+
         if (!res.ok) throw new Error(`❌ /api/me returned status ${res.status}`);
-  
-        const data = await res.json();
-        console.log('👀 /api/me response:', data); // ✅ DEBUG
+
+        let data = await res.json();
+        console.log('👀 /api/me response:', data);
+
+        if (
+          process.env.NODE_ENV === 'development' &&
+          data.consultationScheduledAt &&
+          !devTimeBumped
+        ) {
+          const updatedTime = new Date(Math.ceil((Date.now() + 60000) / 1000) * 1000);
+          const updateRes = await fetch('/api/dev/update-scheduled-time', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: data.email, newTime: updatedTime }),
+          });
+        
+          if (updateRes.ok) {
+            console.log('⏰ Dev consultation time bumped 1 minute into the future');
+            setDevTimeBumped(true); // ✅ prevent rebump
+        
+            const confirmRes = await fetch('/api/me');
+            if (confirmRes.ok) {
+              data = await confirmRes.json();
+              console.log('🔁 Refetched /api/me after time update:', data);
+            } else {
+              console.warn('⚠️ Failed to re-fetch after dev time bump');
+            }
+          } else {
+            console.warn('⚠️ Failed to bump time in dev');
+          }
+        }
+        
+
         setConsultation(data);
-        console.log('👤 consultation data:', data);
-        console.log('🔥 scheduledAt:', data.consultationScheduledAt);
 
-
-        
-  
-        
-
-      if (data.consultationScheduledAt) {
-        const date = new Date(data.consultationScheduledAt);
-        console.log('📆 Parsed scheduledTime:', date); // ✅ DEBUG
-        setScheduledTime(date);
-      } else {
-        console.warn('⚠️ consultationScheduledAt is missing or null');
-      }
-
+        if (data.consultationScheduledAt) {
+          const date = new Date(data.consultationScheduledAt);
+          console.log('📆 Using scheduledTime:', date);
+          setScheduledTime(date);
+        } else {
+          console.warn('⚠️ consultationScheduledAt is missing or null');
+        }
       } catch (error) {
         console.error('❌ Consultation-confirmed page fetch error:', error);
       }
     };
-  
+
     fetchConsultation();
   }, []);
 
@@ -68,23 +91,30 @@ export default function ConsultationScheduledPage() {
 
     const interval = setInterval(() => {
       const now = new Date().getTime();
-      const distance = new Date(scheduledTime).getTime() - now;
+      const target = new Date(scheduledTime).getTime();
+      const distance = target - now;
+
+      console.log('⏱️ Countdown tick:', { now, target, distance });
 
       if (distance <= 0) {
         setShowJoinButton(true);
         setMeetingStarted(true);
         setTimeLeft(null);
         clearInterval(interval);
+        
       } else {
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
         const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
         const minutes = Math.floor((distance / 1000 / 60) % 60);
-        setTimeLeft({ days, hours, minutes });
+        const seconds = Math.floor((distance / 1000) % 60);
+        setTimeLeft({ days, hours, minutes, seconds });
       }
     }, 1000);
 
     return () => clearInterval(interval);
   }, [scheduledTime]);
+
+  
 
   return (
     <main>
