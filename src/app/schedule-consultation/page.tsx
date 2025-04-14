@@ -1,21 +1,14 @@
-'use client';
+import * as React from 'react'
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Box } from '@mui/material';
+import Cal, { getCalApi } from '@calcom/embed-react';
 
-// Declare global Calendly object
-declare global {
-  interface Window {
-    Calendly?: {
-      initInlineWidgets: () => void;
-    };
-  }
-}
+'use client';
 
 export default function ScheduleConsultation() {
   const [user, setUser] = useState<{ firstName: string; lastName: string; email: string } | null>(null);
-  const calendlyRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -34,69 +27,41 @@ export default function ScheduleConsultation() {
   }, []);
 
   useEffect(() => {
-    if (!user || !calendlyRef.current) return;
+    (async function () {
+      const cal = await getCalApi({ namespace: 'carevillage' });
+      cal('ui', {
+        theme: 'light',
+        layout: 'month_view',
+        hideEventTypeDetails: false,
+      });
 
-    const script = document.createElement('script');
-    script.src = 'https://assets.calendly.com/assets/external/widget.js';
-    script.async = true;
-    script.onload = () => {
-      const interval = setInterval(() => {
-        if (window.Calendly?.initInlineWidgets) {
-          window.Calendly.initInlineWidgets();
-          clearInterval(interval);
+      window.addEventListener('message', (e) => {
+        if (e.data.event === 'cal.event_scheduled') {
+          console.log('✅ Cal.com booking detected — redirecting');
+          router.push('/consultation-confirmed');
         }
-      }, 100);
-    };
-
-    document.body.appendChild(script);
-
-    const handleCalendlyEvent = (e: MessageEvent) => {
-      if (e.data.event === 'calendly.event_scheduled') {
-        console.log('✅ Calendly booking detected — redirecting to confirmation page');
-        router.push('/consultation-confirmed');
-      }
-    };
-
-    window.addEventListener('message', handleCalendlyEvent);
-
-    return () => {
-      document.body.removeChild(script);
-      window.removeEventListener('message', handleCalendlyEvent);
-    };
-  }, [user]);
-
-  const calendlyUrl = user
-    ? `https://calendly.com/erikgweller/care-village-consultation?name=${encodeURIComponent(
-        `${user.firstName} ${user.lastName}`
-      )}&email=${encodeURIComponent(user.email)}`
-    : 'https://calendly.com/erikgweller/care-village-consultation';
+      });
+    })();
+  }, [router]);
 
   return (
     <main className="min-h-screen bg-white font-sans">
       {/* Header */}
       <div className="w-full bg-slate-900 text-white">
-          <header
-        style={{ backgroundColor: '#212e5e', width: '100%', height: '64px' }}
-        className="text-white shadow-sm"
-      >
-        <div className="max-w-7xl mx-auto flex items-center justify-between h-full px-6">
-          <div className="text-2xl font-bold tracking-tight flex items-center h-full">
-            CareVillage
+        <header
+          style={{ backgroundColor: '#212e5e', width: '100%', height: '64px' }}
+          className="text-white shadow-sm"
+        >
+          <div className="max-w-7xl mx-auto flex items-center justify-between h-full px-6">
+            <div className="text-2xl font-bold tracking-tight flex items-center h-full">CareVillage</div>
+            <Box display="flex" justifyContent="flex-end" mt={2} />
           </div>
-      
-              <div className="space-x-4">
-              <Box display="flex" justifyContent="flex-end" mt={2}>
-        
-      </Box>
-              </div>
-            </div>
-          </header>
-        </div>
+        </header>
+      </div>
 
-
-      {/* Content */}
+      {/* Content Section */}
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 p-12 items-start justify-center">
-        {/* Left column */}
+        {/* Left column: consultation pitch */}
         <div className="max-w-xl space-y-6">
           <h2 className="text-4xl lg:text-5xl font-bold">Schedule Your Consultation</h2>
           <p className="text-gray-700 text-lg">
@@ -104,15 +69,23 @@ export default function ScheduleConsultation() {
             resources, and support for caregivers. Your consultation helps us match you with the best group for
             your caregiving journey.
           </p>
+
+          <div className="mt-10 p-4 border border-gray-300 rounded-lg bg-gray-50 text-gray-700">
+            <h3 className="text-xl font-semibold mb-2">Available Times</h3>
+            <p>
+              Select a day on the calendar to view available consultation slots. Time options will appear here.
+            </p>
+            <p className="text-sm text-gray-500 mt-2 italic">*Times are based on your local time zone.</p>
+          </div>
         </div>
 
-        {/* Right column */}
-        <div className="w-full">
-          <div
-            ref={calendlyRef}
-            className="calendly-inline-widget shadow-xl rounded-xl border border-gray-200"
-            data-url={calendlyUrl}
-            style={{ minWidth: '320px', height: '700px' }}
+        {/* Right column: Cal.com inline embed */}
+        <div className="w-full h-[700px]">
+          <Cal
+            namespace="carevillage"
+            calLink="carevillage/30min"
+            style={{ width: '100%', height: '100%', overflow: 'scroll' }}
+            config={{ layout: 'month_view', theme: 'light' }}
           />
         </div>
       </section>

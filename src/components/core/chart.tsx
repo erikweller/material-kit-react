@@ -1,7 +1,9 @@
-'use client';
+import * as React from 'react'
 
 import dynamic from 'next/dynamic';
 import { styled } from '@mui/material/styles';
+
+'use client';
 
 const ApexChart = dynamic(() => import('react-apexcharts'), { ssr: false, loading: () => null });
 

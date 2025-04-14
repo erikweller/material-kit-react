@@ -1,4 +1,4 @@
-'use client';
+import * as React from 'react'
 
 import {
   AppBar,
@@ -16,6 +16,8 @@ import { useEffect, useState } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import dayjs from 'dayjs';
+
+'use client';
 
 export default function ConsultationScheduledPage() {
   const { data: session } = useSession();
@@ -111,7 +113,7 @@ export default function ConsultationScheduledPage() {
       }
     }, 1000);
 
-    return () => clearInterval(interval);
+    return () => { clearInterval(interval); };
   }, [scheduledTime]);
 
   
@@ -153,7 +155,7 @@ export default function ConsultationScheduledPage() {
             <Typography variant="h5" sx={{marginTop: '12vh'}} mt={4} mb={2}>Resources While You Wait</Typography>
             <Box display="flex" gap={2}>
               {/* Card 1 */}
-              <Card sx={{ width: 300, cursor: 'pointer' }} onClick={() => setModalOpen(true)}>
+              <Card sx={{ width: 300, cursor: 'pointer' }} onClick={() => { setModalOpen(true); }}>
                 <CardContent>
                   <CardMedia
                     component="img"
@@ -220,23 +222,21 @@ export default function ConsultationScheduledPage() {
               <Typography>Loading...</Typography>
             )}
             <Typography variant="h4" fontWeight={700} mt={1}>
-              {scheduledTime && dayjs(scheduledTime).format('MMMM D, YYYY')}
+              {scheduledTime ? dayjs(scheduledTime).format('MMMM D, YYYY') : null}
             </Typography>
-            {showJoinButton && (
-              <Button
+            {showJoinButton ? <Button
                 variant="contained"
                 color="primary"
                 sx={{ mt: 2 }}
-                onClick={() => router.push('/zoom')}
+                onClick={() => { router.push('/zoom'); }}
               >
                 Click to Join Meeting
-              </Button>
-            )}
+              </Button> : null}
           </Box>
         </Box>
 
         {/* Modal */}
-        <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+        <Modal open={modalOpen} onClose={() => { setModalOpen(false); }}>
           <Box
             sx={{
               position: 'absolute',

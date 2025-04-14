@@ -1,3 +1,5 @@
+import * as React from 'react'
+
 // ✅ FILE: src/app/user/dashboard/page.tsx
 
 export default function DashboardPage() {

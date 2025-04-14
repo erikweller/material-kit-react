@@ -4,5 +4,5 @@ export interface User {
   avatar?: string;
   email?: string;
 
-  [key: string]: unknown;
+  [key: string]: unknown /* TODO: tighten type */;
 }

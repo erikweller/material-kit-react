@@ -1,3 +1,5 @@
+import * as React from 'react'
+
 import type { Components } from '@mui/material/styles';
 import { tableCellClasses } from '@mui/material/TableCell';
 import { tableRowClasses } from '@mui/material/TableRow';

@@ -1,6 +1,6 @@
 // FILE: src/app/auth/calendly/route.ts
 
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { redirect } from 'next/navigation';
 
 export async function GET(req: NextRequest) {

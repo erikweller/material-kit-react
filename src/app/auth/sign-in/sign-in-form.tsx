@@ -1,4 +1,4 @@
-'use client';
+import * as React from 'react'
 
 import {
   Box,
@@ -14,6 +14,8 @@ import { signIn } from 'next-auth/react';
 import Link from '@mui/material/Link';
 import RouterLink from 'next/link';
 import { paths } from '@/paths';
+
+'use client';
 
 export function SignInForm() {
   const router = useRouter();
@@ -80,7 +82,7 @@ export function SignInForm() {
             margin="normal"
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => { setEmail(e.target.value); }}
           />
           <TextField
             label="Password"
@@ -88,7 +90,7 @@ export function SignInForm() {
             margin="normal"
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => { setPassword(e.target.value); }}
           />
           <Box mt={1} textAlign="right">
           <Link
@@ -101,11 +103,9 @@ export function SignInForm() {
             Forgot password?
           </Link>
         </Box>
-          {error && (
-            <Alert severity="error" sx={{ mt: 2 }}>
+          {error ? <Alert severity="error" sx={{ mt: 2 }}>
               {error}
-            </Alert>
-          )}
+            </Alert> : null}
           <Box mt={2}>
             <Button fullWidth variant="contained" type="submit" sx={{background:'#233ea1'}}>
               Sign In

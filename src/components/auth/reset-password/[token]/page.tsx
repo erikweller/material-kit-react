@@ -1,4 +1,4 @@
-'use client';
+import * as React from 'react'
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm, Controller } from 'react-hook-form';
@@ -16,6 +16,8 @@ import {
   OutlinedInput,
   Alert,
 } from '@mui/material';
+
+'use client';
 
 const schema = z.object({
   password: z.string().min(6, { message: 'Password must be at least 6 characters' }),
@@ -83,16 +85,14 @@ export default function ResetPasswordPage() {
             name="password"
             control={control}
             render={({ field }) => (
-              <FormControl error={!!errors.password}>
+              <FormControl error={Boolean(errors.password)}>
                 <InputLabel>New Password</InputLabel>
                 <OutlinedInput {...field} label="New Password" type="password" />
-                {errors.password && (
-                  <FormHelperText>{errors.password.message}</FormHelperText>
-                )}
+                {errors.password ? <FormHelperText>{errors.password.message}</FormHelperText> : null}
               </FormControl>
             )}
           />
-          {error && <Alert severity="error">{error}</Alert>}
+          {error ? <Alert severity="error">{error}</Alert> : null}
           <Button type="submit" variant="contained" sx={{ background: '#233ea1' }}>
             Reset Password
           </Button>

@@ -44,7 +44,7 @@ export function UserProvider({ children }: UserProviderProps): React.JSX.Element
   }, []);
 
   React.useEffect(() => {
-    checkSession().catch((err: unknown) => {
+    checkSession().catch((err: unknown /* TODO: tighten type */) => {
       logger.error(err);
       // noop
     });

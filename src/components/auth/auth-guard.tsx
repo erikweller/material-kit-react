@@ -1,8 +1,10 @@
-'use client';
+import * as React from 'react'
 
 import { useSession } from 'next-auth/react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+
+'use client';
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession();
@@ -25,8 +27,8 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 
         console.debug('🧠 User from /api/me in AuthGuard:', user);
 
-        const isAccepted = !!user.accepted;
-        const hasConsultation = !!user.consultationScheduledAt;
+        const isAccepted = Boolean(user.accepted);
+        const hasConsultation = Boolean(user.consultationScheduledAt);
 
         const isOnConsultationConfirmed = pathname === '/consultation-confirmed';
         const isOnZoom = pathname === '/zoom';

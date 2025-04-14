@@ -1,8 +1,10 @@
-'use client';
+import * as React from 'react'
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
+
+'use client';
 
 const ZoomMeetingClient = dynamic(() => import('@/components/ZoomMeetingClient'), {
   ssr: false,
@@ -34,7 +36,7 @@ export default function ZoomPage() {
         userName: `${me.firstName} ${me.lastName}`,
         onMeetingEnd: () => {
           console.log('👋 Meeting ended');
-          setTimeout(() => router.push('/joingroup'), 500);
+          setTimeout(() => { router.push('/joingroup'); }, 500);
         },
       });
     };
@@ -44,6 +46,6 @@ export default function ZoomPage() {
 
   if (!meetingData) return null;
 
-  const ZoomClient = ZoomMeetingClient as any;
+  const ZoomClient = ZoomMeetingClient as unknown /* TODO: replace with correct type */;
   return <ZoomClient {...meetingData} />;
 }

@@ -72,13 +72,11 @@ export default function SetNewPasswordForm({ token }: { token: string }) {
               <FormControl error={Boolean(errors.password)}>
                 <InputLabel>New password</InputLabel>
                 <OutlinedInput {...field} type="password" label="New password" />
-                {errors.password && (
-                  <FormHelperText>{errors.password.message}</FormHelperText>
-                )}
+                {errors.password ? <FormHelperText>{errors.password.message}</FormHelperText> : null}
               </FormControl>
             )}
           />
-          {error && <Alert severity="error">{error}</Alert>}
+          {error ? <Alert severity="error">{error}</Alert> : null}
           <Button type="submit" disabled={isPending} variant="contained" sx={{ background: '#233ea1' }}>
             Save password
           </Button>

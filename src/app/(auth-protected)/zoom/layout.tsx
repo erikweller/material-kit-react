@@ -1,3 +1,5 @@
+import * as React from 'react'
+
 export default function ZoomLayout({ children }: { children: React.ReactNode }) {
     return (
       <html lang="en">

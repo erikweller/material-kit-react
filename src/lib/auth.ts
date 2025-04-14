@@ -1,8 +1,8 @@
-// src/lib/auth.ts
-import { AuthOptions } from 'next-auth';
+import { type AuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import prisma from './prisma';
+import bcrypt from 'bcryptjs'; // Ensure you use this if passwords are hashed
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -23,15 +23,14 @@ export const authOptions: AuthOptions = {
           where: { email: credentials.email },
         });
 
-        if (!user || user.password !== credentials.password) {
-          return null;
-        }
+        if (!user) return null;
 
-        return {
-          id: user.id,
-          email: user.email,
-          name: `${user.firstName} ${user.lastName}`,
-        } satisfies { id: number; email: string; name: string };
+        // If passwords are hashed (recommended), use bcrypt
+        const isValid = await bcrypt.compare(credentials.password, user.password);
+        if (!isValid) return null;
+
+        // ✅ Return full user object to match expected `User` type
+        return user;
       },
     }),
   ],
@@ -39,12 +38,14 @@ export const authOptions: AuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = typeof user.id === 'string' ? parseInt(user.id) : user.id;
+        token.accepted = user.accepted;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user && token.id) {
         session.user.id = typeof token.id === 'string' ? parseInt(token.id) : token.id;
+        session.user.accepted = token.accepted;
       }
       return session;
     },
@@ -53,4 +54,4 @@ export const authOptions: AuthOptions = {
     signIn: '/app/auth/sign-in',
   },
   secret: process.env.NEXTAUTH_SECRET,
-}
+};

@@ -1,5 +1,4 @@
-// src/app/user-info/page.tsx
-'use client';
+import * as React from 'react'
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
 import useOnclickOutside from 'react-cool-onclickoutside';
 import PhoneInput from 'react-phone-number-input';
@@ -25,13 +24,16 @@ import type { SelectChangeEvent } from '@mui/material/Select';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+// src/app/user-info/page.tsx
+'use client';
+
 export default function UserInfoPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({
     age: '',
     gender: '',
+    otherGender: '',
     occupation: '',
-    otherOccupation: '',
     bestContactTime: '',
     caregivingRole: '',
     otherCaregivingRole: '',
@@ -72,13 +74,26 @@ export default function UserInfoPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+  
+    // If user selected "Other" but left it blank, prevent submission
+    if (formData.gender === 'Other' && !formData.otherGender.trim()) {
+      alert('Please specify your gender identity.');
+      return;
+    }
+  
+    const finalData = {
+      ...formData,
+      gender: formData.gender === 'Other' ? formData.otherGender.trim() : formData.gender,
+    };
+  
     const res = await fetch('/api/user-info', {
       method: 'PUT',
-      body: JSON.stringify(formData),
+      body: JSON.stringify(finalData),
       headers: { 'Content-Type': 'application/json' },
     });
+  
     const data = await res.json();
-
+  
     if (res.ok) {
       await fetch('/api/send-welcome-email', {
         method: 'POST',
@@ -93,6 +108,7 @@ export default function UserInfoPage() {
       alert('❌ Something went wrong saving user info');
     }
   };
+  
 
   const {
     ready,
@@ -135,7 +151,7 @@ export default function UserInfoPage() {
     data.map(({ place_id, structured_formatting: { main_text, secondary_text } }) => (
       <Box
         key={place_id}
-        onClick={handleLocationSelect(main_text + ', ' + secondary_text)}
+        onClick={handleLocationSelect(`${main_text  }, ${  secondary_text}`)}
         sx={{ cursor: 'pointer', px: 2, py: 1, '&:hover': { backgroundColor: '#f0f0f0' } }}
       >
         <strong>{main_text}</strong> <small>{secondary_text}</small>
@@ -155,9 +171,7 @@ export default function UserInfoPage() {
           </div>
       
               <div className="space-x-4">
-              <Box display="flex" justifyContent="flex-end" mt={2}>
-        
-      </Box>
+              <Box display="flex" justifyContent="flex-end" mt={2} />
               </div>
             </div>
           </header>
@@ -182,8 +196,20 @@ export default function UserInfoPage() {
                 <MenuItem value="" disabled>Select...</MenuItem>
                 <MenuItem value="Male">Male</MenuItem>
                 <MenuItem value="Female">Female</MenuItem>
+                <MenuItem value="Other">Other</MenuItem>
               </Select>
             </FormControl>
+
+            {formData.gender === 'Other' && (
+              <TextField
+                fullWidth
+                margin="normal"
+                name="otherGender"
+                placeholder="Enter your gender identity"
+                value={formData.otherGender}
+                onChange={handleChange}
+              />
+            )}
 
             {renderFieldLabel('Your Occupation')}
             <FormControl fullWidth>
@@ -197,16 +223,7 @@ export default function UserInfoPage() {
               </Select>
             </FormControl>
 
-            {formData.occupation === 'Other' && (
-              <TextField
-                fullWidth
-                margin="normal"
-                name="otherOccupation"
-                placeholder="Specify your occupation"
-                value={formData.otherOccupation}
-                onChange={handleChange}
-              />
-            )}
+            
 
             {renderFieldLabel('Best Time to Reach You')}
             <FormControl fullWidth>
@@ -289,7 +306,7 @@ export default function UserInfoPage() {
                 ].map((challenge) => (
                   <FormControlLabel
                     key={challenge}
-                    control={<Checkbox checked={formData.challenges.includes(challenge)} onChange={() => handleArrayChange('challenges', challenge)} />}
+                    control={<Checkbox checked={formData.challenges.includes(challenge)} onChange={() => { handleArrayChange('challenges', challenge); }} />}
                     label={challenge}
                   />
                 ))}
@@ -333,7 +350,7 @@ export default function UserInfoPage() {
                 countryCallingCodeEditable={false}
                 value={formData.phoneNumber}
                 onChange={(value) =>
-                  setFormData((prev) => ({ ...prev, phoneNumber: value || '' }))
+                  { setFormData((prev) => ({ ...prev, phoneNumber: value || '' })); }
                 }
               />
             </Box>
@@ -348,7 +365,7 @@ export default function UserInfoPage() {
                 'Sports', 'Technology', 'Travel', 'Volunteering', 'Writing'].map((interest) => (
                   <FormControlLabel
                     key={interest}
-                    control={<Checkbox checked={formData.interests.includes(interest)} onChange={() => handleArrayChange('interests', interest)} />}
+                    control={<Checkbox checked={formData.interests.includes(interest)} onChange={() => { handleArrayChange('interests', interest); }} />}
                     label={interest}
                   />
                 ))}

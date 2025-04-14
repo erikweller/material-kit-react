@@ -122,11 +122,11 @@ export default function ResetPasswordForm(): React.JSX.Element {
               <FormControl error={Boolean(errors.email)}>
                 <InputLabel>Email address</InputLabel>
                 <OutlinedInput {...field} label="Email address" type="email" />
-                {errors.email && <FormHelperText>{errors.email.message}</FormHelperText>}
+                {errors.email ? <FormHelperText>{errors.email.message}</FormHelperText> : null}
               </FormControl>
             )}
           />
-          {errors.root && <Alert color="error">{errors.root.message}</Alert>}
+          {errors.root ? <Alert color="error">{errors.root.message}</Alert> : null}
           <Button disabled={isPending} type="submit" variant="contained" sx={{ background: '#233ea1' }}>
             Send recovery link
           </Button>

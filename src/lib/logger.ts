@@ -26,19 +26,19 @@ export class Logger {
     this.showLevel = showLevel;
   }
 
-  debug = (...args: unknown[]): void => {
+  debug = (...args: unknown /* TODO: tighten type */[]): void => {
     if (this.canWrite(LogLevel.DEBUG)) {
       this.write(LogLevel.DEBUG, ...args);
     }
   };
 
-  warn = (...args: unknown[]): void => {
+  warn = (...args: unknown /* TODO: tighten type */[]): void => {
     if (this.canWrite(LogLevel.WARN)) {
       this.write(LogLevel.WARN, ...args);
     }
   };
 
-  error = (...args: unknown[]): void => {
+  error = (...args: unknown /* TODO: tighten type */[]): void => {
     if (this.canWrite(LogLevel.ERROR)) {
       this.write(LogLevel.ERROR, ...args);
     }
@@ -48,7 +48,7 @@ export class Logger {
     return this.levelNumber >= LogLevelNumber[level];
   }
 
-  private write(level: keyof typeof LogLevel, ...args: unknown[]): void {
+  private write(level: keyof typeof LogLevel, ...args: unknown /* TODO: tighten type */[]): void {
     let prefix = this.prefix;
 
     if (this.showLevel) {

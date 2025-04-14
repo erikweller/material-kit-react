@@ -18,38 +18,38 @@ export interface NextAppDirEmotionCacheProviderProps {
 }
 
 // Adapted from https://github.com/garronej/tss-react/blob/main/src/next/appDir.tsx
-export default function NextAppDirEmotionCacheProvider(props: NextAppDirEmotionCacheProviderProps): React.JSX.Element {
+export default function NextAppDirEmotionCacheProvider(
+  props: NextAppDirEmotionCacheProviderProps
+): React.JSX.Element {
   const { options, CacheProvider = DefaultCacheProvider, children } = props;
 
   const [registry] = React.useState<Registry>(() => {
     const cache = createCache(options);
     cache.compat = true;
-    // eslint-disable-next-line @typescript-eslint/unbound-method -- Expected
     const prevInsert = cache.insert;
     let inserted: { name: string; isGlobal: boolean }[] = [];
+
     cache.insert = (...args) => {
       const [selector, serialized] = args;
-
       if (cache.inserted[serialized.name] === undefined) {
         inserted.push({ name: serialized.name, isGlobal: !selector });
       }
-
       return prevInsert(...args);
     };
+
     const flush = (): { name: string; isGlobal: boolean }[] => {
       const prevInserted = inserted;
       inserted = [];
       return prevInserted;
     };
+
     return { cache, flush };
   });
 
   useServerInsertedHTML((): React.JSX.Element | null => {
     const inserted = registry.flush();
 
-    if (inserted.length === 0) {
-      return null;
-    }
+    if (inserted.length === 0) return null;
 
     let styles = '';
     let dataEmotionAttribute = registry.cache.key;
@@ -59,7 +59,7 @@ export default function NextAppDirEmotionCacheProvider(props: NextAppDirEmotionC
     inserted.forEach(({ name, isGlobal }) => {
       const style = registry.cache.inserted[name];
 
-      if (typeof style !== 'boolean') {
+      if (typeof style === 'string') {
         if (isGlobal) {
           globals.push({ name, style });
         } else {
@@ -71,16 +71,17 @@ export default function NextAppDirEmotionCacheProvider(props: NextAppDirEmotionC
 
     return (
       <React.Fragment>
-        {globals.map(
-          ({ name, style }): React.JSX.Element => (
-            <style
-              dangerouslySetInnerHTML={{ __html: style }}
-              data-emotion={`${registry.cache.key}-global ${name}`}
-              key={name}
-            />
-          )
-        )}
-        {styles ? <style dangerouslySetInnerHTML={{ __html: styles }} data-emotion={dataEmotionAttribute} /> : null}
+        {globals.map(({ name, style }) => (
+          <style
+            key={name}
+            data-emotion={`${registry.cache.key}-global ${name}`}
+            dangerouslySetInnerHTML={{ __html: style }}
+          />
+        ))}
+        {styles ? <style
+            data-emotion={dataEmotionAttribute}
+            dangerouslySetInnerHTML={{ __html: styles }}
+          /> : null}
       </React.Fragment>
     );
   });

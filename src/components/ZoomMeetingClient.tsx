@@ -1,16 +1,18 @@
-'use client';
+import * as React from 'react'
 
 import { useEffect, useRef } from 'react';
-import ZoomMtgEmbedded from "@zoomus/websdk/embedded"
+import ZoomMtgEmbedded from '@zoomus/websdk/embedded';
 
-type Props = {
+'use client';
+
+interface Props {
   signature: string;
   sdkKey: string;
   meetingNumber: string;
   userName: string;
   password: string;
   onMeetingEnd: () => void;
-};
+}
 
 export default function ZoomMeetingClient({
   signature,
@@ -21,7 +23,6 @@ export default function ZoomMeetingClient({
   onMeetingEnd,
 }: Props) {
   const zoomContainerRef = useRef<HTMLDivElement | null>(null);
-  
 
   useEffect(() => {
     const client = ZoomMtgEmbedded.createClient();
@@ -30,7 +31,7 @@ export default function ZoomMeetingClient({
     if (!zoomRoot) return;
 
     client.init({
-      zoomAppRoot: meetingSDKElement,
+      zoomAppRoot: zoomRoot, // ✅ Corrected line
       language: 'en-US',
       customize: {
         video: {
@@ -38,16 +39,16 @@ export default function ZoomMeetingClient({
           viewSizes: {
             default: {
               width: 1000,
-              height: 600
+              height: 600,
             },
             ribbon: {
               width: 300,
-              height: 700
-            }
-          }
-        }
-      }
-    })
+              height: 700,
+            },
+          },
+        },
+      },
+    });
 
     client.join({
       sdkKey,
@@ -58,7 +59,7 @@ export default function ZoomMeetingClient({
       success: () => {
         console.log('✅ Zoom joined');
       },
-      error: (err) => {
+      error: (err: unknown /* TODO: tighten type */) => {
         console.error('❌ Zoom join error', err);
         onMeetingEnd();
       },
@@ -74,7 +75,7 @@ export default function ZoomMeetingClient({
       window.removeEventListener('beforeunload', handleLeave);
       client.leaveMeeting();
     };
-  }, []);
+  }, [sdkKey, signature, meetingNumber, password, userName, onMeetingEnd]);
 
   return (
     <div
@@ -84,8 +85,8 @@ export default function ZoomMeetingClient({
         position: 'fixed',
         top: 0,
         left: 0,
-        width: '600',
-        height: '600',
+        width: 600,
+        height: 600,
         zIndex: 9999,
       }}
     />

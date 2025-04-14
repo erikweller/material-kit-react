@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { Resend } from 'resend';
-import { randomBytes } from 'crypto';
+import { randomBytes } from 'node:crypto';
 
 export async function POST(req: NextRequest) {
   const { email } = await req.json();

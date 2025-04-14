@@ -1,7 +1,9 @@
-'use client';
+import * as React from 'react'
 
 import { signOut, useSession } from 'next-auth/react';
 import { Button, Typography, Box, Container } from '@mui/material';
+
+'use client';
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();

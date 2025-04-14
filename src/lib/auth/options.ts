@@ -1,8 +1,8 @@
-import { AuthOptions } from 'next-auth';
+import { type AuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { prisma } from '@/lib/db';
 import { compare } from 'bcryptjs';
-import { JWT } from 'next-auth/jwt';
+import { type JWT } from 'next-auth/jwt';
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -16,7 +16,7 @@ export const authOptions: AuthOptions = {
         if (!credentials?.email || !credentials?.password) throw new Error('Missing credentials');
 
         const user = await prisma.user.findUnique({ where: { email: credentials.email } });
-        if (!user || !user.password) throw new Error('Invalid credentials');
+        if (!user?.password) throw new Error('Invalid credentials');
 
         const isValid = await compare(credentials.password, user.password);
         if (!isValid) throw new Error('Invalid password');
@@ -34,7 +34,7 @@ export const authOptions: AuthOptions = {
     strategy: 'jwt',
   },
   callbacks: {
-    async jwt({ token, user }: { token: JWT; user?: any }) {
+    async jwt({ token, user }: { token: JWT; user?: unknown /* TODO: tighten type */ }) {
       if (user) {
         token.id = user.id;
         token.accepted = user.accepted;

@@ -112,10 +112,10 @@ export function SignUpForm(): React.JSX.Element {
           control={control}
           name="firstName"
           render={({ field }) => (
-            <FormControl fullWidth error={!!errors.firstName}>
+            <FormControl fullWidth error={Boolean(errors.firstName)}>
               <InputLabel>First name</InputLabel>
               <OutlinedInput {...field} label="First name" />
-              {errors.firstName && <FormHelperText>{errors.firstName.message}</FormHelperText>}
+              {errors.firstName ? <FormHelperText>{errors.firstName.message}</FormHelperText> : null}
             </FormControl>
           )}
         />
@@ -123,10 +123,10 @@ export function SignUpForm(): React.JSX.Element {
           control={control}
           name="lastName"
           render={({ field }) => (
-            <FormControl fullWidth error={!!errors.lastName}>
+            <FormControl fullWidth error={Boolean(errors.lastName)}>
               <InputLabel>Last name</InputLabel>
               <OutlinedInput {...field} label="Last name" />
-              {errors.lastName && <FormHelperText>{errors.lastName.message}</FormHelperText>}
+              {errors.lastName ? <FormHelperText>{errors.lastName.message}</FormHelperText> : null}
             </FormControl>
           )}
         />
@@ -134,10 +134,10 @@ export function SignUpForm(): React.JSX.Element {
           control={control}
           name="email"
           render={({ field }) => (
-            <FormControl fullWidth error={!!errors.email}>
+            <FormControl fullWidth error={Boolean(errors.email)}>
               <InputLabel>Email address</InputLabel>
               <OutlinedInput {...field} label="Email address" type="email" />
-              {errors.email && <FormHelperText>{errors.email.message}</FormHelperText>}
+              {errors.email ? <FormHelperText>{errors.email.message}</FormHelperText> : null}
             </FormControl>
           )}
         />
@@ -145,10 +145,10 @@ export function SignUpForm(): React.JSX.Element {
           control={control}
           name="password"
           render={({ field }) => (
-            <FormControl fullWidth error={!!errors.password}>
+            <FormControl fullWidth error={Boolean(errors.password)}>
               <InputLabel>Password</InputLabel>
               <OutlinedInput {...field} label="Password" type="password" />
-              {errors.password && <FormHelperText>{errors.password.message}</FormHelperText>}
+              {errors.password ? <FormHelperText>{errors.password.message}</FormHelperText> : null}
             </FormControl>
           )}
         />
@@ -156,7 +156,7 @@ export function SignUpForm(): React.JSX.Element {
           control={control}
           name="terms"
           render={({ field }) => (
-            <FormControl error={!!errors.terms}>
+            <FormControl error={Boolean(errors.terms)}>
               <FormControlLabel
                 control={<Checkbox {...field} />}
                 label={
@@ -168,11 +168,11 @@ export function SignUpForm(): React.JSX.Element {
                   </>
                 }
               />
-              {errors.terms && <FormHelperText>{errors.terms.message}</FormHelperText>}
+              {errors.terms ? <FormHelperText>{errors.terms.message}</FormHelperText> : null}
             </FormControl>
           )}
         />
-        {errors.root && <Alert severity="error">{errors.root.message}</Alert>}
+        {errors.root ? <Alert severity="error">{errors.root.message}</Alert> : null}
         <Button type="submit" disabled={isPending} variant="contained" sx={{ background: '#233ea1' }} fullWidth>
           {isPending ? 'Signing up…' : 'Sign up'}
         </Button>

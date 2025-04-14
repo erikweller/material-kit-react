@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import crypto from 'crypto';
+import { type NextRequest, NextResponse } from 'next/server';
+import crypto from 'node:crypto';
 
 export async function POST(req: NextRequest) {
   const { meetingNumber, role } = await req.json();
@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
     tokenExp: exp,
   };
 
-  const base64 = (obj: any) =>
+  const base64 = (obj: unknown /* TODO: tighten type */) =>
     Buffer.from(JSON.stringify(obj))
       .toString('base64')
       .replace(/=+$/, '')
