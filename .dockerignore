@@ -1,0 +1,16 @@
+node_modules
+npm-debug.log
+pnpm-lock.yaml
+Dockerfile
+.dockerignore
+.env
+.env.local
+.env.development
+.git
+.gitignore
+.vscode
+coverage
+*.md
+*.test.*
+*.spec.*
+*.log

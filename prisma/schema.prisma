@@ -8,42 +8,39 @@ datasource db {
 }
 
 model User {
-  id                      Int      @id @default(autoincrement())
-  email                   String   @unique
-  password                String
-  firstName               String
-  lastName                String
-  age                     Int?
-  caregivingRole          String?
-  careRecipientAge        String?
-  careRecipientCondition  String?
-  gender                  String?  // 👈 NEW
-  occupation              String?  // 👈 NEW
-  otherOccupation         String?  // 👈 NEW (if selected "Other")
-  bestContactTime         String?  // 👈 NEW
-  challenges              String[]
-  communicationMethod     String?
-  phoneNumber             String?
-  interests               String[]
-  location                String?
-  consultationZoomLink    String?
-  consultationScheduledAt DateTime?
-  calendlyRescheduleUrl   String?
-  calendlyCancelUrl       String?
-  role                    String   @default("user")
-  accepted                Boolean   @default(false)
-  createdAt               DateTime @default(now())
-  updatedAt               DateTime @updatedAt
-  passwordResetTokens PasswordResetToken[]
-
+  id                        Int                    @id @default(autoincrement())
+  email                     String                 @unique
+  password                  String
+  firstName                 String
+  lastName                 String
+  age                       Int?
+  caregivingRole            String?
+  careRecipientAge          String?
+  careRecipientCondition    String?
+  gender                    String?                // NEW
+  occupation                String?                // NEW
+  bestContactTime           String?                // NEW
+  challenges                String[]               // stored as array
+  communicationMethod       String?
+  phoneNumber               String?
+  interests                 String[]               // stored as array
+  location                  String?
+  consultationZoomLink      String?
+  consultationScheduledAt   DateTime?
+  calendlyRescheduleUrl     String?
+  calendlyCancelUrl         String?
+  role                      String                 @default("user")
+  accepted                  Boolean                @default(false)
+  createdAt                 DateTime               @default(now())
+  updatedAt                 DateTime               @updatedAt
+  passwordResetTokens       PasswordResetToken[]
 }
 
-
 model PasswordResetToken {
-  id        Int      @id @default(autoincrement())
-  token     String   @unique
-  userId    Int                              // ✅ MUST match User.id type
-  user      User     @relation(fields: [userId], references: [id])
-  expires   DateTime
-  createdAt DateTime @default(now())
+  id          Int       @id @default(autoincrement())
+  token       String    @unique
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  expires     DateTime
+  createdAt   DateTime  @default(now())
 }
