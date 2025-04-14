@@ -1,4 +1,5 @@
 'use client';
+import * as React from "react";
 
 import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
@@ -15,6 +16,7 @@ import { usePopover } from '@/hooks/use-popover';
 
 import { MobileNav } from './mobile-nav';
 import { UserPopover } from './user-popover';
+
 
 export function MainNav(): React.JSX.Element {
   const [openNav, setOpenNav] = React.useState<boolean>(false);

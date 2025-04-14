@@ -1,12 +1,9 @@
 'use client';
-
-import { useRouter } from 'next/navigation';
-import { signIn } from 'next-auth/react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm, Controller } from 'react-hook-form';
-import { z } from 'zod';
+import * as React from "react";
 
 import RouterLink from 'next/link';
+import { useRouter } from 'next/navigation';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
@@ -18,8 +15,12 @@ import Link from '@mui/material/Link';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { signIn } from 'next-auth/react';
+import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import { paths } from '@/paths';
+
 
 const schema = z.object({
   firstName: z.string().min(1, { message: 'First name is required' }),

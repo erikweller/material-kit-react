@@ -19,10 +19,10 @@ export async function POST(req: Request) {
     const res = await fetch('https://api.cal.com/v2/platform/managed-users', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${platformToken}`,
+        Authorization: `Bearer ${platformToken}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name, email })
+      body: JSON.stringify({ name, email }),
     });
 
     const data = await res.json();
@@ -34,7 +34,6 @@ export async function POST(req: Request) {
 
     // Success — return access + refresh tokens + ID
     return NextResponse.json(data);
-
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Unknown error';
     console.error('Unhandled error creating managed user:', message);

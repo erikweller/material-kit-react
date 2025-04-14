@@ -1,14 +1,15 @@
+import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
+
 import { authOptions } from '@/lib/auth/options';
 import { prisma } from '@/lib/db';
-import { NextResponse } from 'next/server';
 
 export async function GET() {
   const session = await getServerSession(authOptions);
 
   console.log('🔐 Session from getServerSession:', session);
 
-  if (!session?.user?.email) {
+  if (!session?.user.email) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -24,11 +25,11 @@ export async function GET() {
       careRecipientAge: true,
       challenges: true,
       communicationMethod: true,
-      consultationScheduledAt: true, 
-      consultationZoomLink: true,  
+      consultationScheduledAt: true,
+      consultationZoomLink: true,
       interests: true,
       location: true,
-      accepted: true, 
+      accepted: true,
     },
   });
 

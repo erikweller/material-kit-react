@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
+
 import { prisma } from '@/lib/prisma';
 import { resend } from '@/lib/resend';
-import { z } from 'zod';
 
 const schema = z.object({
   email: z.string().email(),
@@ -60,7 +61,6 @@ export async function POST(req: Request) {
       </div>
     `,
   });
-  
 
   return NextResponse.json({ success: true });
 }

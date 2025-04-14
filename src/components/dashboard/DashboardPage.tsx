@@ -1,9 +1,8 @@
-import * as React from 'react'
-
-import { signOut, useSession } from 'next-auth/react';
-import { Button, Typography, Box, Container } from '@mui/material';
-
 'use client';
+import * as React from 'react';
+import { Box, Button, Container, Typography } from '@mui/material';
+import { signOut, useSession } from 'next-auth/react';
+
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
@@ -22,13 +21,9 @@ export default function DashboardPage() {
     <Container maxWidth="sm">
       <Box mt={8} textAlign="center">
         <Typography variant="h3" gutterBottom color="primary">
-          Hello {session.user?.name || 'User'}!!
+          Hello {session.user.name || 'User'}!!
         </Typography>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => signOut({ callbackUrl: '/auth/sign-in' })}
-        >
+        <Button variant="contained" color="secondary" onClick={() => signOut({ callbackUrl: '/auth/sign-in' })}>
           Logout
         </Button>
       </Box>

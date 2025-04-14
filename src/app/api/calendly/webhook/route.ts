@@ -1,4 +1,5 @@
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
+
 import prisma from '@/lib/prisma';
 import { resend } from '@/lib/resend';
 
@@ -6,7 +7,19 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const payload = body.payload;
+    const payload = body.payload as {
+      email: string;
+      name?: string;
+      scheduled_event: {
+        location?: {
+          join_url?: string;
+        };
+        start_time?: string;
+      };
+      reschedule_url?: string;
+      cancel_url?: string;
+    };
+
     const event = body.event;
 
     if (!payload) {
@@ -41,7 +54,7 @@ export async function POST(req: NextRequest) {
       where: { email },
       data: {
         consultationZoomLink: joinUrl,
-        consultationScheduledAt: new Date(scheduledTime), // ✅ Convert to Date object
+        consultationScheduledAt: new Date(scheduledTime),
         calendlyRescheduleUrl: rescheduleUrl,
         calendlyCancelUrl: cancelUrl,
       },
@@ -51,7 +64,7 @@ export async function POST(req: NextRequest) {
     console.log(`📆 Saved consultationScheduledAt: ${new Date(scheduledTime).toISOString()}`);
 
     const firstName = name.split(' ')[0] || 'there';
-    await resend.emails.send({
+    await (resend.emails.send as (params: any) => Promise<any>)({
       from: 'CareVillage <info@carevillage.io>',
       to: email,
       subject: `Your Consultation is Confirmed!`,

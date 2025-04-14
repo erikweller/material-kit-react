@@ -1,5 +1,7 @@
 'use client';
+import * as React from "react";
 
+import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Alert,
@@ -13,9 +15,9 @@ import {
 } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { z as zod } from 'zod';
-import { useRouter } from 'next/navigation';
 
 import { authClient } from '@/lib/auth/client';
+
 
 const schema = zod.object({
   email: zod.string().min(1, { message: 'Email is required' }).email(),
@@ -106,10 +108,7 @@ export default function ResetPasswordForm(): React.JSX.Element {
       <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'black', mt: 1 }}>
         Reset password
       </Typography>
-      <Typography
-        variant="subtitle1"
-        sx={{ fontWeight: 400, color: 'text.secondary', mt: '-12px' }}
-      >
+      <Typography variant="subtitle1" sx={{ fontWeight: 400, color: 'text.secondary', mt: '-12px' }}>
         Enter your email address and you’ll be sent a link to reset your password.
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>

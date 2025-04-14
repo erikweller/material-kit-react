@@ -1,11 +1,11 @@
-import * as React from 'react'
-
+'use client';
+import * as React from "react";
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Box } from '@mui/material';
 import Cal, { getCalApi } from '@calcom/embed-react';
+import { Box } from '@mui/material';
 
-'use client';
+
 
 export default function ScheduleConsultation() {
   const [user, setUser] = useState<{ firstName: string; lastName: string; email: string } | null>(null);
@@ -48,10 +48,7 @@ export default function ScheduleConsultation() {
     <main className="min-h-screen bg-white font-sans">
       {/* Header */}
       <div className="w-full bg-slate-900 text-white">
-        <header
-          style={{ backgroundColor: '#212e5e', width: '100%', height: '64px' }}
-          className="text-white shadow-sm"
-        >
+        <header style={{ backgroundColor: '#212e5e', width: '100%', height: '64px' }} className="text-white shadow-sm">
           <div className="max-w-7xl mx-auto flex items-center justify-between h-full px-6">
             <div className="text-2xl font-bold tracking-tight flex items-center h-full">CareVillage</div>
             <Box display="flex" justifyContent="flex-end" mt={2} />
@@ -65,16 +62,14 @@ export default function ScheduleConsultation() {
         <div className="max-w-xl space-y-6">
           <h2 className="text-4xl lg:text-5xl font-bold">Schedule Your Consultation</h2>
           <p className="text-gray-700 text-lg">
-            CareVillage is a dedicated community of licensed mental health professionals who offer guidance,
-            resources, and support for caregivers. Your consultation helps us match you with the best group for
-            your caregiving journey.
+            CareVillage is a dedicated community of licensed mental health professionals who offer guidance, resources,
+            and support for caregivers. Your consultation helps us match you with the best group for your caregiving
+            journey.
           </p>
 
           <div className="mt-10 p-4 border border-gray-300 rounded-lg bg-gray-50 text-gray-700">
             <h3 className="text-xl font-semibold mb-2">Available Times</h3>
-            <p>
-              Select a day on the calendar to view available consultation slots. Time options will appear here.
-            </p>
+            <p>Select a day on the calendar to view available consultation slots. Time options will appear here.</p>
             <p className="text-sm text-gray-500 mt-2 italic">*Times are based on your local time zone.</p>
           </div>
         </div>

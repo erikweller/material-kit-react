@@ -1,4 +1,5 @@
 'use client';
+import * as React from "react";
 
 import RouterLink from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -17,6 +18,7 @@ import { Logo } from '@/components/core/logo';
 
 import { navItems } from './config';
 import { navIcons } from './nav-icons';
+
 
 export function SideNav(): React.JSX.Element {
   const pathname = usePathname();

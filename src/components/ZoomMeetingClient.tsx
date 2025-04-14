@@ -1,9 +1,9 @@
-import * as React from 'react'
-
+'use client';
+import * as React from "react";
 import { useEffect, useRef } from 'react';
 import ZoomMtgEmbedded from '@zoomus/websdk/embedded';
 
-'use client';
+
 
 interface Props {
   signature: string;

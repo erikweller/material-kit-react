@@ -1,4 +1,5 @@
 'use client';
+import * as React from "react";
 
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -16,6 +17,7 @@ import Typography from '@mui/material/Typography';
 import dayjs from 'dayjs';
 
 import { useSelection } from '@/hooks/use-selection';
+
 
 function noop(): void {
   // do nothing
@@ -50,8 +52,8 @@ export function CustomersTable({
 
   const { selectAll, deselectAll, selectOne, deselectOne, selected } = useSelection(rowIds);
 
-  const selectedSome = (selected?.size ?? 0) > 0 && (selected?.size ?? 0) < rows.length;
-  const selectedAll = rows.length > 0 && selected?.size === rows.length;
+  const selectedSome = (selected.size ?? 0) > 0 && (selected.size ?? 0) < rows.length;
+  const selectedAll = rows.length > 0 && selected.size === rows.length;
 
   return (
     <Card>
@@ -81,7 +83,7 @@ export function CustomersTable({
           </TableHead>
           <TableBody>
             {rows.map((row) => {
-              const isSelected = selected?.has(row.id);
+              const isSelected = selected.has(row.id);
 
               return (
                 <TableRow hover key={row.id} selected={isSelected}>

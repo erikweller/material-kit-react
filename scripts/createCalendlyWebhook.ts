@@ -1,5 +1,6 @@
 // scripts/createCalendlyWebhook.ts
-import path from 'path';
+import path from 'node:path';
+
 import dotenv from 'dotenv';
 import fetch from 'node-fetch'; // If using Node 18 or below
 
@@ -7,11 +8,7 @@ import fetch from 'node-fetch'; // If using Node 18 or below
 dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
 
 // ✅ Extract required variables
-const {
-  CALENDLY_PERSONAL_TOKEN,
-  CALENDLY_WEBHOOK_URL,
-  CALENDLY_ORGANIZATION_URI,
-} = process.env;
+const { CALENDLY_PERSONAL_TOKEN, CALENDLY_WEBHOOK_URL, CALENDLY_ORGANIZATION_URI } = process.env;
 
 // ✅ Check env vars
 if (!CALENDLY_PERSONAL_TOKEN || !CALENDLY_WEBHOOK_URL || !CALENDLY_ORGANIZATION_URI) {

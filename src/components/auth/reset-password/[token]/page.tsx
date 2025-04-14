@@ -1,23 +1,21 @@
-import * as React from 'react'
-
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+'use client';
+import * as React from 'react';
 import { useState } from 'react';
-
+import { useRouter, useSearchParams } from 'next/navigation';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  Stack,
-  Typography,
+  Alert,
   Button,
   FormControl,
   FormHelperText,
   InputLabel,
   OutlinedInput,
-  Alert,
+  Stack,
+  Typography,
 } from '@mui/material';
+import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
 
-'use client';
 
 const schema = z.object({
   password: z.string().min(6, { message: 'Password must be at least 6 characters' }),

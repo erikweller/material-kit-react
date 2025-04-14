@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
 import { hash } from 'bcryptjs';
 import { z } from 'zod';
+
+import { prisma } from '@/lib/prisma';
 
 const schema = z.object({
   token: z.string().uuid(),

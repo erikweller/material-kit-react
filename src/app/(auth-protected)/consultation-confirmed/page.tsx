@@ -1,5 +1,7 @@
-import * as React from 'react'
-
+'use client';
+import * as React from "react";
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   AppBar,
   Box,
@@ -12,12 +14,10 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { useSession, signOut } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 import dayjs from 'dayjs';
+import { signOut, useSession } from 'next-auth/react';
 
-'use client';
+
 
 export default function ConsultationScheduledPage() {
   const { data: session } = useSession();
@@ -30,7 +30,9 @@ export default function ConsultationScheduledPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [devTimeBumped, setDevTimeBumped] = useState(false);
 
-  const [timeLeft, setTimeLeft] = useState<{ days: number; hours: number; minutes: number; seconds: number } | null>(null);
+  const [timeLeft, setTimeLeft] = useState<{ days: number; hours: number; minutes: number; seconds: number } | null>(
+    null
+  );
 
   useEffect(() => {
     const fetchConsultation = async () => {
@@ -42,22 +44,18 @@ export default function ConsultationScheduledPage() {
         let data = await res.json();
         console.log('👀 /api/me response:', data);
 
-        if (
-          process.env.NODE_ENV === 'development' &&
-          data.consultationScheduledAt &&
-          !devTimeBumped
-        ) {
+        if (process.env.NODE_ENV === 'development' && data.consultationScheduledAt && !devTimeBumped) {
           const updatedTime = new Date(Math.ceil((Date.now() + 60000) / 1000) * 1000);
           const updateRes = await fetch('/api/dev/update-scheduled-time', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: data.email, newTime: updatedTime }),
           });
-        
+
           if (updateRes.ok) {
             console.log('⏰ Dev consultation time bumped 1 minute into the future');
             setDevTimeBumped(true); // ✅ prevent rebump
-        
+
             const confirmRes = await fetch('/api/me');
             if (confirmRes.ok) {
               data = await confirmRes.json();
@@ -69,7 +67,6 @@ export default function ConsultationScheduledPage() {
             console.warn('⚠️ Failed to bump time in dev');
           }
         }
-        
 
         setConsultation(data);
 
@@ -86,7 +83,7 @@ export default function ConsultationScheduledPage() {
     };
 
     fetchConsultation();
-  }, []);
+  }, [devTimeBumped]);
 
   useEffect(() => {
     if (!scheduledTime) return;
@@ -103,7 +100,6 @@ export default function ConsultationScheduledPage() {
         setMeetingStarted(true);
         setTimeLeft(null);
         clearInterval(interval);
-        
       } else {
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
         const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
@@ -113,25 +109,30 @@ export default function ConsultationScheduledPage() {
       }
     }, 1000);
 
-    return () => { clearInterval(interval); };
+    return () => {
+      clearInterval(interval);
+    };
   }, [scheduledTime]);
-
-  
 
   return (
     <main>
       <AppBar position="static" sx={{ backgroundColor: '#212e5e' }}>
         <Toolbar sx={{ justifyContent: 'space-between' }}>
-          <Typography variant="h6" fontWeight={700}>CareVillage</Typography>
-          <Box display="flex" alignItems="center"  gap={4} sx={{marginRight: '10vh'}}>
-            <Typography sx={{marginRight: '18vh'}} >Personal Assistant</Typography>
-            <Button variant="text" sx={{
-    color: 'white',
-    '&:hover': {
-      backgroundColor: 'transparent',
-      
-    },
-  }} onClick={() => signOut({ callbackUrl: '/auth/sign-in' })}>
+          <Typography variant="h6" fontWeight={700}>
+            CareVillage
+          </Typography>
+          <Box display="flex" alignItems="center" gap={4} sx={{ marginRight: '10vh' }}>
+            <Typography sx={{ marginRight: '18vh' }}>Personal Assistant</Typography>
+            <Button
+              variant="text"
+              sx={{
+                color: 'white',
+                '&:hover': {
+                  backgroundColor: 'transparent',
+                },
+              }}
+              onClick={() => signOut({ callbackUrl: '/auth/sign-in' })}
+            >
               Logout
             </Button>
           </Box>
@@ -145,17 +146,25 @@ export default function ConsultationScheduledPage() {
               Thank you for signing up
             </Typography>
             <Typography paragraph>
-              We are very excited to meet you. You are currently being paired with a group and will meet your leader soon.
+              We are very excited to meet you. You are currently being paired with a group and will meet your leader
+              soon.
             </Typography>
             <Typography paragraph>
-              While you wait for your consultation we have included some resources for you as well as free access to our personal assistant tool.
+              While you wait for your consultation we have included some resources for you as well as free access to our
+              personal assistant tool.
             </Typography>
-            
 
-            <Typography variant="h5" sx={{marginTop: '12vh'}} mt={4} mb={2}>Resources While You Wait</Typography>
+            <Typography variant="h5" sx={{ marginTop: '12vh' }} mt={4} mb={2}>
+              Resources While You Wait
+            </Typography>
             <Box display="flex" gap={2}>
               {/* Card 1 */}
-              <Card sx={{ width: 300, cursor: 'pointer' }} onClick={() => { setModalOpen(true); }}>
+              <Card
+                sx={{ width: 300, cursor: 'pointer' }}
+                onClick={() => {
+                  setModalOpen(true);
+                }}
+              >
                 <CardContent>
                   <CardMedia
                     component="img"
@@ -169,7 +178,15 @@ export default function ConsultationScheduledPage() {
                 </CardContent>
               </Card>
               {/* Card 2 */}
-              <Card sx={{ width: 300, cursor: 'pointer' }} onClick={() => window.open('https://www.mayoclinic.org/healthy-lifestyle/stress-management/in-depth/support-groups/art-20044655', '_blank')}>
+              <Card
+                sx={{ width: 300, cursor: 'pointer' }}
+                onClick={() =>
+                  window.open(
+                    'https://www.mayoclinic.org/healthy-lifestyle/stress-management/in-depth/support-groups/art-20044655',
+                    '_blank'
+                  )
+                }
+              >
                 <CardContent>
                   <CardMedia
                     component="img"
@@ -183,7 +200,12 @@ export default function ConsultationScheduledPage() {
                 </CardContent>
               </Card>
               {/* Card 3 */}
-              <Card sx={{ width: 300, cursor: 'pointer', backgroundColor: '#fffbe6' }} onClick={() => window.open('https://www.health.harvard.edu/blog/self-care-for-the-caregiver-201810171716', '_blank')}>
+              <Card
+                sx={{ width: 300, cursor: 'pointer', backgroundColor: '#fffbe6' }}
+                onClick={() =>
+                  window.open('https://www.health.harvard.edu/blog/self-care-for-the-caregiver-201810171716', '_blank')
+                }
+              >
                 <CardContent>
                   <CardMedia
                     component="img"
@@ -200,21 +222,31 @@ export default function ConsultationScheduledPage() {
           </Box>
 
           <Box width="35%" textAlign="center">
-            <Typography variant="h6" fontWeight={600}>YOUR MEETING IS SCHEDULED</Typography>
+            <Typography variant="h6" fontWeight={600}>
+              YOUR MEETING IS SCHEDULED
+            </Typography>
             {meetingStarted ? (
-              <Typography mt={2} fontWeight={600}>Your meeting is beginning now.</Typography>
+              <Typography mt={2} fontWeight={600}>
+                Your meeting is beginning now.
+              </Typography>
             ) : timeLeft ? (
               <Box display="flex" justifyContent="center" mt={2} mb={1} gap={1}>
                 <Box border={1} p={2} borderRadius={2} minWidth={80}>
-                  <Typography variant="h5" fontWeight={700}>{timeLeft.days.toString().padStart(2, '0')}</Typography>
+                  <Typography variant="h5" fontWeight={700}>
+                    {timeLeft.days.toString().padStart(2, '0')}
+                  </Typography>
                   <Typography variant="caption">DAYS</Typography>
                 </Box>
                 <Box border={1} p={2} borderRadius={2} minWidth={80}>
-                  <Typography variant="h5" fontWeight={700}>{timeLeft.hours.toString().padStart(2, '0')}</Typography>
+                  <Typography variant="h5" fontWeight={700}>
+                    {timeLeft.hours.toString().padStart(2, '0')}
+                  </Typography>
                   <Typography variant="caption">HOURS</Typography>
                 </Box>
                 <Box border={1} p={2} borderRadius={2} minWidth={80}>
-                  <Typography variant="h5" fontWeight={700}>{timeLeft.minutes.toString().padStart(2, '0')}</Typography>
+                  <Typography variant="h5" fontWeight={700}>
+                    {timeLeft.minutes.toString().padStart(2, '0')}
+                  </Typography>
                   <Typography variant="caption">MINUTES</Typography>
                 </Box>
               </Box>
@@ -224,19 +256,28 @@ export default function ConsultationScheduledPage() {
             <Typography variant="h4" fontWeight={700} mt={1}>
               {scheduledTime ? dayjs(scheduledTime).format('MMMM D, YYYY') : null}
             </Typography>
-            {showJoinButton ? <Button
+            {showJoinButton ? (
+              <Button
                 variant="contained"
                 color="primary"
                 sx={{ mt: 2 }}
-                onClick={() => { router.push('/zoom'); }}
+                onClick={() => {
+                  router.push('/zoom');
+                }}
               >
                 Click to Join Meeting
-              </Button> : null}
+              </Button>
+            ) : null}
           </Box>
         </Box>
 
         {/* Modal */}
-        <Modal open={modalOpen} onClose={() => { setModalOpen(false); }}>
+        <Modal
+          open={modalOpen}
+          onClose={() => {
+            setModalOpen(false);
+          }}
+        >
           <Box
             sx={{
               position: 'absolute',
@@ -271,7 +312,8 @@ export default function ConsultationScheduledPage() {
                 Chest Rub Exercise
               </Typography>
               <Typography>
-                Close your eyes and rub your chest in a circular motion while breathing deeply. Repeat when overwhelmed or before entering stressful situations.
+                Close your eyes and rub your chest in a circular motion while breathing deeply. Repeat when overwhelmed
+                or before entering stressful situations.
               </Typography>
             </Box>
 
@@ -280,7 +322,8 @@ export default function ConsultationScheduledPage() {
                 Enter Their Reality
               </Typography>
               <Typography>
-                Your loved one may be experiencing something that isn’t real to you. Try not to contradict them or take their behaviors personally.
+                Your loved one may be experiencing something that isn’t real to you. Try not to contradict them or take
+                their behaviors personally.
               </Typography>
             </Box>
           </Box>

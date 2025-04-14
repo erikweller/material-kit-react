@@ -1,3 +1,4 @@
+import * as React from "react";
 import type { Metadata } from 'next';
 
 import { config } from '@/config';
@@ -10,19 +11,11 @@ export const metadata: Metadata = {
   title: `Reset password | Auth | ${config.site.name}`,
 };
 
-export default function Page({
-  searchParams,
-}: {
-  searchParams: { token?: string };
-}): React.JSX.Element {
+export default function Page({ searchParams }: { searchParams: { token?: string } }): React.JSX.Element {
   return (
     <Layout>
       <GuestGuard>
-        {searchParams?.token ? (
-          <SetNewPasswordForm token={searchParams.token} />
-        ) : (
-          <ResetPasswordForm />
-        )}
+        {searchParams.token ? <SetNewPasswordForm token={searchParams.token} /> : <ResetPasswordForm />}
       </GuestGuard>
     </Layout>
   );

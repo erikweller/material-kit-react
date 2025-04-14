@@ -1,10 +1,10 @@
-import * as React from 'react'
-
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-
 'use client';
+import * as React from "react";
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+
+
 
 interface Props {
   children: React.ReactNode;

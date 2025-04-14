@@ -1,5 +1,6 @@
-import { type NextRequest, NextResponse } from 'next/server';
 import crypto from 'node:crypto';
+
+import { NextResponse, type NextRequest } from 'next/server';
 
 export async function POST(req: NextRequest) {
   const { meetingNumber, role } = await req.json();
@@ -22,11 +23,7 @@ export async function POST(req: NextRequest) {
   };
 
   const base64 = (obj: unknown /* TODO: tighten type */) =>
-    Buffer.from(JSON.stringify(obj))
-      .toString('base64')
-      .replace(/=+$/, '')
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_');
+    Buffer.from(JSON.stringify(obj)).toString('base64').replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_');
 
   const signatureData = `${base64(header)}.${base64(payload)}`;
   const hash = crypto

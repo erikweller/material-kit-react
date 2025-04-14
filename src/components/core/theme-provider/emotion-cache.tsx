@@ -1,10 +1,12 @@
 'use client';
+import * as React from "react";
 
-import * as React from 'react'; // ✅ Fix: explicitly import React for JSX use
+
 import { useServerInsertedHTML } from 'next/navigation';
 import createCache from '@emotion/cache';
 import type { EmotionCache, Options as OptionsOfCreateCache } from '@emotion/cache';
 import { CacheProvider as DefaultCacheProvider } from '@emotion/react';
+
 
 interface Registry {
   cache: EmotionCache;
@@ -18,9 +20,7 @@ export interface NextAppDirEmotionCacheProviderProps {
 }
 
 // Adapted from https://github.com/garronej/tss-react/blob/main/src/next/appDir.tsx
-export default function NextAppDirEmotionCacheProvider(
-  props: NextAppDirEmotionCacheProviderProps
-): React.JSX.Element {
+export default function NextAppDirEmotionCacheProvider(props: NextAppDirEmotionCacheProviderProps): React.JSX.Element {
   const { options, CacheProvider = DefaultCacheProvider, children } = props;
 
   const [registry] = React.useState<Registry>(() => {
@@ -78,12 +78,7 @@ export default function NextAppDirEmotionCacheProvider(
             dangerouslySetInnerHTML={{ __html: style }}
           />
         ))}
-        {styles ? (
-          <style
-            data-emotion={dataEmotionAttribute}
-            dangerouslySetInnerHTML={{ __html: styles }}
-          />
-        ) : null}
+        {styles ? <style data-emotion={dataEmotionAttribute} dangerouslySetInnerHTML={{ __html: styles }} /> : null}
       </React.Fragment>
     );
   });

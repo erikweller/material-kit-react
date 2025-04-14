@@ -1,5 +1,4 @@
-import * as React from 'react'
-
+import * as React from "react";
 import { paperClasses } from '@mui/material/Paper';
 import type { Components } from '@mui/material/styles';
 

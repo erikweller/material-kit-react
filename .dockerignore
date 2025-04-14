@@ -1,16 +1,33 @@
+# Dependency directories
 node_modules
+
+# Logs
+*.log
 npm-debug.log
+
+# Lockfiles not used in container
 pnpm-lock.yaml
+
+# Docker files
 Dockerfile
 .dockerignore
+
+# Environment files (except .env.production which is explicitly copied)
 .env
 .env.local
 .env.development
+.env.test
+.env.*  # Catches anything new (like .env.staging), but NOT .env.production if handled explicitly
+
+# VCS + Editor junk
 .git
 .gitignore
 .vscode
+
+# Testing
 coverage
-*.md
 *.test.*
 *.spec.*
-*.log
+
+# Docs
+*.md

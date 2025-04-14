@@ -1,7 +1,7 @@
 // FILE: src/app/auth/calendly/route.ts
 
-import { type NextRequest, NextResponse } from 'next/server';
 import { redirect } from 'next/navigation';
+import { NextResponse, type NextRequest } from 'next/server';
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;

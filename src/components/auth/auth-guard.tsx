@@ -1,10 +1,10 @@
-import * as React from 'react'
-
-import { useSession } from 'next-auth/react';
-import { usePathname, useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-
 'use client';
+import * as React from "react";
+import { useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+
+
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession();

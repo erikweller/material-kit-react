@@ -1,4 +1,5 @@
 'use client';
+import * as React from "react";
 
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -13,6 +14,7 @@ import { ArrowRight as ArrowRightIcon } from '@phosphor-icons/react/dist/ssr/Arr
 import type { ApexOptions } from 'apexcharts';
 
 import { Chart } from '@/components/core/chart';
+
 
 export interface SalesProps {
   chartSeries: { name: string; data: number[] }[];

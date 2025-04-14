@@ -1,10 +1,9 @@
-import * as React from 'react'
-
+'use client';
+import * as React from "react";
 import { useEffect } from 'react';
 import Cal, { getCalApi } from '@calcom/embed-react';
 
 // ✅ FILE: src/components/CalcomEmbed.tsx
-'use client';
 
 interface CalcomEmbedProps {
   name: string;
