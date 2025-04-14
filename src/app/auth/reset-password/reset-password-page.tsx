@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 import { useSearchParams } from 'next/navigation';
 
 import { GuestGuard } from '@/components/auth/guest-guard';

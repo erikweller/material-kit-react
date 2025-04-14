@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 import Script from 'next/script';
 import { SessionProvider } from 'next-auth/react';
 import type { Viewport } from 'next';

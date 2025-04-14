@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 
 export interface NoSsrProps {

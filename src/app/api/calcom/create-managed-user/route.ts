@@ -35,8 +35,9 @@ export async function POST(req: Request) {
     // Success — return access + refresh tokens + ID
     return NextResponse.json(data);
 
-  } catch (err: unknown /* TODO: tighten type */) {
-    console.error('Unhandled error creating managed user:', err);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Unknown error';
+    console.error('Unhandled error creating managed user:', message);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

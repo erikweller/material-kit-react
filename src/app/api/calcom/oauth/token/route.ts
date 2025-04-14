@@ -36,8 +36,9 @@ export async function POST() {
 
     console.log('✅ Got Cal.com token:', data);
     return NextResponse.json(data);
-  } catch (err: unknown /* TODO: tighten type */) {
-    console.error('❌ Error fetching token:', err.message);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Unknown error';
+    console.error('❌ Error fetching token:', message);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

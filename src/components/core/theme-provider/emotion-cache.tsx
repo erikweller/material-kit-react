@@ -1,6 +1,6 @@
 'use client';
 
-import * as React from 'react';
+import * as React from 'react'; // ✅ Fix: explicitly import React for JSX use
 import { useServerInsertedHTML } from 'next/navigation';
 import createCache from '@emotion/cache';
 import type { EmotionCache, Options as OptionsOfCreateCache } from '@emotion/cache';
@@ -78,10 +78,12 @@ export default function NextAppDirEmotionCacheProvider(
             dangerouslySetInnerHTML={{ __html: style }}
           />
         ))}
-        {styles ? <style
+        {styles ? (
+          <style
             data-emotion={dataEmotionAttribute}
             dangerouslySetInnerHTML={{ __html: styles }}
-          /> : null}
+          />
+        ) : null}
       </React.Fragment>
     );
   });
