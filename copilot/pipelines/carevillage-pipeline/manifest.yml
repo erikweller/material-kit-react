@@ -6,7 +6,7 @@ source:
   properties:
     repository: erikweller/material-kit-react
     branch: main
-    connection_name: copilot-erikw-material-kit-react
+    connection_arn: arn:aws:codestar-connections:us-east-1:952530696403:connection/3db2ade9-ed7f-4f09-a98f-5f698c2427b0
 
 stages:
   - name: dev
