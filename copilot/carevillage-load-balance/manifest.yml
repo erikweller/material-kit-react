@@ -1,0 +1,43 @@
+# The manifest for the "carevillage-load-balance" service.
+# Read the full specification for the "Load Balanced Web Service" type at:
+#  https://aws.github.io/copilot-cli/docs/manifest/lb-web-service/
+
+name: carevillage-load-balance
+type: Load Balanced Web Service
+
+http:
+  path: '/'
+  healthcheck: '/api/healthz'  # Optional: ensure this endpoint returns 200 OK
+
+image:
+  build: Dockerfile
+  port: 3001
+
+cpu: 256
+memory: 512
+platform: linux/x86_64
+
+count:
+  range:
+    min: 1
+    max: 3000
+  cpu_percentage: 70  # Scale up when average CPU exceeds 70%
+
+exec: true
+
+variables:
+  DATABASE_URL: postgresql://postgres:Manhattan10019!@db.udfddqzqicdabvrjsvpn.supabase.co:5432/postgres
+
+network:
+  connect: true
+
+# Optional: Add secrets using AWS SSM or Secrets Manager
+# secrets:
+#   GITHUB_TOKEN: GITHUB_TOKEN
+
+# Optional per-env overrides
+# environments:
+#   test:
+#     count: 2
+#     deployment:
+#       rolling: 'recreate'
