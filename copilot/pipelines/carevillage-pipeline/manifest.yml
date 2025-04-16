@@ -10,7 +10,7 @@ source:
   properties:
     repository: erikweller/material-kit-react
     branch: main
-    connection_name: copilot-erikw-material-kit-react
+    connection_arn: arn:aws:codestar-connections:us-east-1:952530696403:connection/6689129c-6c87-43d4-a325-583a4fb5b227
 
 stages:
   - name: dev
