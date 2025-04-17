@@ -19,7 +19,9 @@ jobs:
           PIPELINE_NAME="pipeline-carevillage-service-carevillage-pipeline-Pipeline-NmIy2ab5jMOn"
           START_OUTPUT=$(aws codepipeline start-pipeline-execution --name "$PIPELINE_NAME")
           EXECUTION_ID=$(echo "$START_OUTPUT" | jq -r .pipelineExecutionId)
-          echo "execution_id=$EXECUTION_ID" >> "$GITHUB_OUTPUT"
+
+          echo "✅ Triggered pipeline execution: $EXECUTION_ID"
+          echo "execution_id=$EXECUTION_ID" >> $GITHUB_OUTPUT
 
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -32,7 +34,7 @@ jobs:
           PIPELINE_NAME="pipeline-carevillage-service-carevillage-pipeline-Pipeline-NmIy2ab5jMOn"
           EXECUTION_ID="${{ steps.trigger.outputs.execution_id }}"
 
-          echo "Polling for result..."
+          echo "⏳ Polling status for execution ID: $EXECUTION_ID"
           for i in {1..60}; do
             STATUS=$(aws codepipeline get-pipeline-execution \
               --pipeline-name "$PIPELINE_NAME" \
@@ -43,18 +45,20 @@ jobs:
             echo "Status: $STATUS"
 
             if [[ "$STATUS" == "Succeeded" ]]; then
-              echo "result=success" >> "$GITHUB_OUTPUT"
+              echo "✅ Pipeline succeeded."
+              echo "result=success" >> $GITHUB_OUTPUT
               exit 0
             elif [[ "$STATUS" == "Failed" || "$STATUS" == "Stopped" ]]; then
-              echo "result=failure" >> "$GITHUB_OUTPUT"
+              echo "❌ Pipeline failed or was stopped."
+              echo "result=failure" >> $GITHUB_OUTPUT
               exit 1
             fi
 
             sleep 10
           done
 
-          echo "Pipeline timed out"
-          echo "result=timeout" >> "$GITHUB_OUTPUT"
+          echo "⚠️ Pipeline timed out."
+          echo "result=timeout" >> $GITHUB_OUTPUT
           exit 1
 
         env:
