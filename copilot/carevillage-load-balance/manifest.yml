@@ -7,7 +7,12 @@ type: Load Balanced Web Service
 
 http:
   path: '/'
-  healthcheck: '/api/healthz'  # Optional: ensure this endpoint returns 200 OK
+  healthcheck:
+    path: '/api/healthz'
+    interval: 15s
+    timeout: 10s
+    healthy_threshold: 2
+    unhealthy_threshold: 5
 
 image:
   build: Dockerfile

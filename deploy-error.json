@@ -1,0 +1,21 @@
+{
+    "pipelineExecution": {
+        "pipelineName": "pipeline-carevillage-service-carevillage-pipeline-Pipeline-lO6KxucEh1q9",
+        "pipelineVersion": 1,
+        "pipelineExecutionId": "2710c806-aa1f-416f-baa4-b5c053707af4",
+        "status": "Failed",
+        "artifactRevisions": [
+            {
+                "name": "SCCheckoutArtifact",
+                "revisionId": "2307f8626b0ab00d1e3ad9fcee0028ba8b3e2699",
+                "revisionSummary": "{\"ProviderType\":\"GitHub\",\"CommitMessage\":\"Set GitHub CodeStar connection ARN for Copilot pipeline\"}",
+                "revisionUrl": "https://us-east-1.console.aws.amazon.com/codesuite/settings/connections/redirect?connectionArn=arn:aws:codestar-connections:us-east-1:952530696403:connection/3db2ade9-ed7f-4f09-a98f-5f698c2427b0&referenceType=COMMIT&FullRepositoryId=erikweller/material-kit-react&Commit=2307f8626b0ab00d1e3ad9fcee0028ba8b3e2699"
+            }
+        ],
+        "trigger": {
+            "triggerType": "StartPipelineExecution",
+            "triggerDetail": "arn:aws:iam::952530696403:user/carevillage-admin"
+        },
+        "executionMode": "SUPERSEDED"
+    }
+}
