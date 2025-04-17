@@ -275,7 +275,7 @@ export default function UserInfoPage() {
               </Select>
             </FormControl>
 
-            {renderFieldLabel('Caregiving Role')}
+            {renderFieldLabel('Your Caregiving Role')}
             <FormControl fullWidth>
               <Select name="caregivingRole" value={formData.caregivingRole} onChange={handleSelectChange} displayEmpty>
                 <MenuItem value="" disabled>
