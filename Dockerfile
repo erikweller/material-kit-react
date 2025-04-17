@@ -19,7 +19,8 @@
     RUN npm run build
     
     # ---------- Step 2: Runtime ----------
-    FROM node:20-alpine AS runner
+    FROM public.ecr.aws/docker/library/node:20-alpine AS runner
+
     
     WORKDIR /app
     RUN apk add --no-cache libc6-compat
