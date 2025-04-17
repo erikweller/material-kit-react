@@ -16,7 +16,7 @@ jobs:
       - name: Trigger AWS CodePipeline
         id: trigger
         run: |
-          PIPELINE_NAME="carevillage-pipeline"
+          PIPELINE_NAME="pipeline-carevillage-service-carevillage-pipeline-Pipeline-NmIy2ab5jMOn"
           START_OUTPUT=$(aws codepipeline start-pipeline-execution --name "$PIPELINE_NAME")
           EXECUTION_ID=$(echo "$START_OUTPUT" | jq -r .pipelineExecutionId)
           echo "execution_id=$EXECUTION_ID" >> "$GITHUB_OUTPUT"
@@ -29,7 +29,7 @@ jobs:
       - name: Wait for Pipeline Result
         id: wait
         run: |
-          PIPELINE_NAME="carevillage-pipeline"
+          PIPELINE_NAME="pipeline-carevillage-service-carevillage-pipeline-Pipeline-NmIy2ab5jMOn"
           EXECUTION_ID="${{ steps.trigger.outputs.execution_id }}"
 
           echo "Polling for result..."
