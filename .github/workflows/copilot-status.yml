@@ -1,0 +1,58 @@
+name: Deploy to AWS Dev on push to main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  trigger-and-wait:
+    name: Trigger & Monitor Copilot Pipeline
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Trigger AWS CodePipeline
+        id: trigger
+        run: |
+          PIPELINE_NAME="pipeline-carevillage-service-carevillage-pipeline-Pipeline-NmIy2ab5jMOn"
+          START_OUTPUT=$(aws codepipeline start-pipeline-execution --name "$PIPELINE_NAME")
+          EXECUTION_ID=$(echo "$START_OUTPUT" | jq -r .pipelineExecutionId)
+          echo "execution_id=$EXECUTION_ID" >> "$GITHUB_OUTPUT"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+
+      - name: Wait for Pipeline Result
+        run: |
+          PIPELINE_NAME="pipeline-carevillage-service-carevillage-pipeline-Pipeline-NmIy2ab5jMOn"
+          EXECUTION_ID="${{ steps.trigger.outputs.execution_id }}"
+          echo "Polling status for execution ID: $EXECUTION_ID"
+
+          for i in {1..90}; do
+            STATUS=$(aws codepipeline get-pipeline-execution \
+              --pipeline-name "$PIPELINE_NAME" \
+              --pipeline-execution-id "$EXECUTION_ID" \
+              --query 'pipelineExecution.status' \
+              --output text)
+
+            echo "Status: $STATUS"
+            if [[ "$STATUS" == "Succeeded" ]]; then
+              echo "✅ Pipeline succeeded"
+              exit 0
+            elif [[ "$STATUS" == "Failed" || "$STATUS" == "Stopped" ]]; then
+              echo "❌ Pipeline failed or was stopped"
+              exit 1
+            fi
+            sleep 10
+          done
+
+          echo "⏱️ Pipeline timed out"
+          exit 1
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
