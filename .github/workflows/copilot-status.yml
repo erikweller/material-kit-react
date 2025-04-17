@@ -1,0 +1,63 @@
+name: Copilot Pipeline CI Check
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  trigger-and-wait:
+    name: Trigger & Monitor Copilot Pipeline
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Trigger AWS CodePipeline
+        id: trigger
+        run: |
+          PIPELINE_NAME="carevillage-pipeline"
+          START_OUTPUT=$(aws codepipeline start-pipeline-execution --name "$PIPELINE_NAME")
+          EXECUTION_ID=$(echo "$START_OUTPUT" | jq -r .pipelineExecutionId)
+          echo "execution_id=$EXECUTION_ID" >> "$GITHUB_OUTPUT"
+
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+
+      - name: Wait for Pipeline Result
+        id: wait
+        run: |
+          PIPELINE_NAME="carevillage-pipeline"
+          EXECUTION_ID="${{ steps.trigger.outputs.execution_id }}"
+
+          echo "Polling for result..."
+          for i in {1..60}; do
+            STATUS=$(aws codepipeline get-pipeline-execution \
+              --pipeline-name "$PIPELINE_NAME" \
+              --pipeline-execution-id "$EXECUTION_ID" \
+              --query 'pipelineExecution.status' \
+              --output text)
+
+            echo "Status: $STATUS"
+
+            if [[ "$STATUS" == "Succeeded" ]]; then
+              echo "result=success" >> "$GITHUB_OUTPUT"
+              exit 0
+            elif [[ "$STATUS" == "Failed" || "$STATUS" == "Stopped" ]]; then
+              echo "result=failure" >> "$GITHUB_OUTPUT"
+              exit 1
+            fi
+
+            sleep 10
+          done
+
+          echo "Pipeline timed out"
+          echo "result=timeout" >> "$GITHUB_OUTPUT"
+          exit 1
+
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
