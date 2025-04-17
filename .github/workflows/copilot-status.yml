@@ -1,8 +1,9 @@
-name: Copilot Pipeline CI Check
+name: Deploy to AWS Dev on push to main
 
 on:
-  pull_request:
-    branches: [main]
+  push:
+    branches:
+      - main
 
 jobs:
   trigger-and-wait:
@@ -19,23 +20,19 @@ jobs:
           PIPELINE_NAME="pipeline-carevillage-service-carevillage-pipeline-Pipeline-NmIy2ab5jMOn"
           START_OUTPUT=$(aws codepipeline start-pipeline-execution --name "$PIPELINE_NAME")
           EXECUTION_ID=$(echo "$START_OUTPUT" | jq -r .pipelineExecutionId)
-
-          echo "✅ Triggered pipeline execution: $EXECUTION_ID"
-          echo "execution_id=$EXECUTION_ID" >> $GITHUB_OUTPUT
-
+          echo "execution_id=$EXECUTION_ID" >> "$GITHUB_OUTPUT"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
 
       - name: Wait for Pipeline Result
-        id: wait
         run: |
           PIPELINE_NAME="pipeline-carevillage-service-carevillage-pipeline-Pipeline-NmIy2ab5jMOn"
           EXECUTION_ID="${{ steps.trigger.outputs.execution_id }}"
+          echo "Polling status for execution ID: $EXECUTION_ID"
 
-          echo "⏳ Polling status for execution ID: $EXECUTION_ID"
-          for i in {1..60}; do
+          for i in {1..90}; do
             STATUS=$(aws codepipeline get-pipeline-execution \
               --pipeline-name "$PIPELINE_NAME" \
               --pipeline-execution-id "$EXECUTION_ID" \
@@ -43,24 +40,18 @@ jobs:
               --output text)
 
             echo "Status: $STATUS"
-
             if [[ "$STATUS" == "Succeeded" ]]; then
-              echo "✅ Pipeline succeeded."
-              echo "result=success" >> $GITHUB_OUTPUT
+              echo "✅ Pipeline succeeded"
               exit 0
             elif [[ "$STATUS" == "Failed" || "$STATUS" == "Stopped" ]]; then
-              echo "❌ Pipeline failed or was stopped."
-              echo "result=failure" >> $GITHUB_OUTPUT
+              echo "❌ Pipeline failed or was stopped"
               exit 1
             fi
-
             sleep 10
           done
 
-          echo "⚠️ Pipeline timed out."
-          echo "result=timeout" >> $GITHUB_OUTPUT
+          echo "⏱️ Pipeline timed out"
           exit 1
-
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
