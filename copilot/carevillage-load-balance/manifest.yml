@@ -1,7 +1,3 @@
-# The manifest for the "carevillage-load-balance" service.
-# Read the full specification for the "Load Balanced Web Service" type at:
-#  https://aws.github.io/copilot-cli/docs/manifest/lb-web-service/
-
 name: carevillage-load-balance
 type: Load Balanced Web Service
 
@@ -18,7 +14,7 @@ image:
   build:
     dockerfile: Dockerfile
     args:
-      APP_ENV: $APP_ENV
+      APP_ENV: $APP_ENV  # ← Copilot will inject the correct env value here
   port: 3001
 
 cpu: 256
