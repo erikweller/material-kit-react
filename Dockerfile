@@ -10,13 +10,18 @@
     
     COPY . .
     
-    # Inject APP_ENV build arg to determine which .env file to use
-    ARG APP_ENV=dev
+    # 👇 This makes sure build arg is defined
+    ARG APP_ENV
     ENV APP_ENV=$APP_ENV
-    RUN echo "🔥 Copying .env file based on APP_ENV: $APP_ENV"
-    RUN if [ "$APP_ENV" = "prod" ]; then cp .env.production.prod .env; else cp .env.production.dev .env; fi
-    RUN echo "🔥 .env contents:"
-    RUN cat .env
+    
+    # 👇 Log which env is being selected
+    RUN echo "🔥 Using APP_ENV=$APP_ENV" && \
+      if [ "$APP_ENV" = "prod" ]; then \
+        echo "🔥 Copying .env.production.prod to .env" && cp .env.production.prod .env; \
+      else \
+        echo "🔥 Copying .env.production.dev to .env" && cp .env.production.dev .env; \
+      fi && \
+      echo "🔥 Final .env contents:" && cat .env
     
     RUN npx prisma generate
     RUN npm run build

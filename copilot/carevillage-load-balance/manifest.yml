@@ -14,7 +14,7 @@ image:
   build:
     dockerfile: Dockerfile
     args:
-      APP_ENV: $APP_ENV
+      APP_ENV: dev
   port: 3001
 
 cpu: 256
