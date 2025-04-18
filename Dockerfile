@@ -10,17 +10,19 @@
     
     COPY . .
     
-    # ✅ Dynamically copy the right .env based on build arg
+    # Dynamically copy the right .env file based on APP_ENV build arg
     ARG APP_ENV=dev
-    # Will use .env.production.dev for dev, .env.production.prod for prod
+    ENV APP_ENV=$APP_ENV
+    RUN echo "🔥 Copying .env file based on APP_ENV: $APP_ENV"
     RUN if [ "$APP_ENV" = "prod" ]; then cp .env.production.prod .env; else cp .env.production.dev .env; fi
+    RUN echo "🔥 .env contents:"
+    RUN cat .env
     
     RUN npx prisma generate
     RUN npm run build
     
     # ---------- Step 2: Runtime ----------
     FROM public.ecr.aws/docker/library/node:20-alpine AS runner
-
     
     WORKDIR /app
     RUN apk add --no-cache libc6-compat
@@ -36,6 +38,5 @@
     ENV NODE_ENV=production
     ENV PORT=3001
     
-    # ✅ Runs migration, then starts the server
     CMD npx prisma migrate deploy && npm start
     

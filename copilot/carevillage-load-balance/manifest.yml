@@ -15,7 +15,10 @@ http:
     unhealthy_threshold: 5
 
 image:
-  build: Dockerfile
+  build:
+    dockerfile: Dockerfile
+    args:
+      APP_ENV: $APP_ENV
   port: 3001
 
 cpu: 256
