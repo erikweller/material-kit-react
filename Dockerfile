@@ -43,5 +43,6 @@
     ENV NODE_ENV=production
     ENV PORT=3001
     
-    CMD npx prisma migrate deploy && npm start
+    CMD npx prisma generate && npm start
+
     
