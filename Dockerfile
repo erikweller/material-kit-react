@@ -10,14 +10,13 @@
     
     COPY . .
     
-    # Build-time environment variable from Copilot
+    # Inject APP_ENV build arg to determine which .env file to use
     ARG APP_ENV=dev
     ENV APP_ENV=$APP_ENV
-    
-    # 👇 Sanity log
     RUN echo "🔥 Copying .env file based on APP_ENV: $APP_ENV"
     RUN if [ "$APP_ENV" = "prod" ]; then cp .env.production.prod .env; else cp .env.production.dev .env; fi
-    RUN echo "📄 Copied .env content:" && cat .env
+    RUN echo "🔥 .env contents:"
+    RUN cat .env
     
     RUN npx prisma generate
     RUN npm run build

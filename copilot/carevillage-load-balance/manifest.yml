@@ -14,7 +14,7 @@ image:
   build:
     dockerfile: Dockerfile
     args:
-      APP_ENV: $APP_ENV  # ← Copilot will inject the correct env value here
+      APP_ENV: $APP_ENV
   port: 3001
 
 cpu: 256
@@ -28,7 +28,6 @@ count:
   cpu_percentage: 70
 
 exec: true
-
 network:
   connect: true
 
